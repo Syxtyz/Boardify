@@ -1,21 +1,45 @@
-import { useState } from "react"
+import { useState } from "react";
 
 function App() {
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
+  const [workplaceOpen, setWorkplaceOpen] = useState(false);
+
+  const handleButton = () => {
+    setWorkplaceOpen((prev) => !prev);
+  }
+
   return (
     <>
-      <div className="navigationHeader">
-        <div className="navigationHeaderLeft">
+      <div className="bg-black flex justify-between items-center p-2.5">
+        <div className="flex gap-2.5">
           <h1>Boardify</h1>
-          <button>Workplace</button>
+          <button onClick={handleButton} className="flex items-center gap-1 cursor-pointer justify-center">
+            Workplace
+            <span
+              className={`inline-block transform transition-transform duration-300 ${
+                workplaceOpen ? "rotate-180" : "rotate"
+              }`}
+            >
+              /\
+            </span>
+          </button>
         </div>
-        <div className="navigationHeaderRight">
+        <div className="flex gap-2.5">
           <button>Theme</button>
           <button onClick={() => setLoginOpen(true)}>Login</button>
           <button onClick={() => setRegisterOpen(true)}>Register</button>
         </div>
       </div>
+
+      {workplaceOpen && (
+        <div className="bg-black w-36 h-screen transform transition-transform duration-300">
+          <div className="flex gap-10">
+            <h1>Your boards</h1>
+            <button className="cursor-pointer">+</button>
+          </div>
+        </div>
+      )}
 
       {loginOpen && (
         <div className="modalOverlay">
