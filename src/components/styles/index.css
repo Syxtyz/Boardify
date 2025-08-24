@@ -23,6 +23,7 @@ body {
   box-sizing: border-box;
 }
 
+
 .modalOverlay {
   position: fixed;
   top: 0;

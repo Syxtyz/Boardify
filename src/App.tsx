@@ -1,68 +1,132 @@
 import { useState } from "react";
+import TopNavigation from "./components/navigations/TopNavigation";
+import SideNavigation from "./components/navigations/SideNavigation";
 
 function App() {
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
-  const [workplaceOpen, setWorkplaceOpen] = useState(false);
+    const [loginOpen, setLoginOpen] = useState(false);
+    const [registerOpen, setRegisterOpen] = useState(false);
+    const [workplaceOpen, setWorkplaceOpen] = useState(false);
 
-  const handleButton = () => {
-    setWorkplaceOpen((prev) => !prev);
-  }
+    return (
+        <>
+            <TopNavigation
+                workplaceOpen={workplaceOpen}
+                setWorkplaceOpen={setWorkplaceOpen}
+                setLoginOpen={setLoginOpen}
+                setRegisterOpen={setRegisterOpen}
+            />
+            <SideNavigation workplaceOpen={workplaceOpen} />
+            
+            {loginOpen && (
+                <div className="modalOverlay">
+                    <div className="modalContent">
+                        <h1>Login Form</h1>
+                        <button onClick={() => setLoginOpen(false)}>Close</button>
+                    </div>
+                </div>
+            )}
 
-  return (
-    <>
-      <div className="bg-black flex justify-between items-center p-2.5">
-        <div className="flex gap-2.5">
-          <h1>Boardify</h1>
-          <button onClick={handleButton} className="flex items-center gap-1 cursor-pointer justify-center">
-            Workplace
-            <span
-              className={`inline-block transform transition-transform duration-300 ${
-                workplaceOpen ? "rotate-180" : "rotate"
-              }`}
-            >
-              /\
-            </span>
-          </button>
-        </div>
-        <div className="flex gap-2.5">
-          <button>Theme</button>
-          <button onClick={() => setLoginOpen(true)}>Login</button>
-          <button onClick={() => setRegisterOpen(true)}>Register</button>
-        </div>
-      </div>
-
-      {workplaceOpen && (
-        <div className="bg-black w-36 h-screen transform transition-transform duration-300">
-          <div className="flex gap-10">
-            <h1>Your boards</h1>
-            <button className="cursor-pointer">+</button>
-          </div>
-        </div>
-      )}
-
-      {loginOpen && (
-        <div className="modalOverlay">
-          <div className="modalContent">
-            <h1>Login Form</h1>
-            <button onClick={() => setLoginOpen(false)}>Close</button>
-          </div>
-        </div>
-      )}
-
-      {registerOpen && (
-        <div className="modalOverlay">
-          <div className="modalContent">
-            <h1>Register Form</h1>
-            <button onClick={() => setRegisterOpen(false)}>Close</button>
-          </div>
-        </div>
-      )}
-    </>
-  )
+            {registerOpen && (
+                <div className="modalOverlay">
+                    <div className="modalContent">
+                        <h1>Register Form</h1>
+                        <button onClick={() => setRegisterOpen(false)}>Close</button>
+                    </div>
+                </div>
+            )}
+        </>
+    );
 }
 
-export default App
+export default App;
+
+// import { useState } from "react";
+// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+// import DarkModeIcon from '@mui/icons-material/DarkMode';
+
+// function App() {
+//    const [loginOpen, setLoginOpen] = useState(false);
+//    const [registerOpen, setRegisterOpen] = useState(false);
+//    const [workplaceOpen, setWorkplaceOpen] = useState(false);
+
+//    const handleButton = () => {
+//       setWorkplaceOpen((prev) => !prev);
+//    }
+
+//    return (
+//       <>
+//          <div className="bg-black flex justify-between items-center p-2.5 pl-40 pr-40">
+//             <div className="flex gap-7.5">
+//                <h1>Boardify</h1>
+//                <button
+//                   onClick={handleButton}
+//                   className="flex items-center cursor-pointer"
+//                   >
+//                   Workplace
+//                   <KeyboardArrowDownIcon
+//                      className={`ml-1 transform transition-transform duration-300 ${
+//                         workplaceOpen ? "rotate-180" : "rotate-0"
+//                      }`}
+//                   />
+//                </button>
+//             </div>
+//             <div className="flex gap-7.5">
+//                <button><DarkModeIcon className="cursor-pointer"/></button>
+//                <button onClick={() => setLoginOpen(true)}>Login</button>
+//                <button onClick={() => setRegisterOpen(true)}>Register</button>
+//             </div>
+//          </div>
+
+//          <div
+//             className={`overflow-hidden transition-all duration-500 ease-in-out ${
+//                workplaceOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+//             }`}
+//             >
+//             <div className="bg-black w-96 h-screen p-4 text-white">
+//                <div className="flex gap-10">
+//                   <h1>Your boards</h1>
+//                   <button className="cursor-pointer">+</button>
+//                </div>
+//             </div>
+//          </div>
+
+//          {loginOpen && (
+//          <div className="modalOverlay">
+//             <div className="modalContent">
+//                <h1>Login Form</h1>
+//                <button onClick={() => setLoginOpen(false)}>Close</button>
+//             </div>
+//          </div>
+//          )}
+
+//          {registerOpen && (
+//             <div className="modalOverlay">
+//                <div className="modalContent">
+//                   <h1>Register Form</h1>
+//                   <button onClick={() => setRegisterOpen(false)}>Close</button>
+//                </div>
+//             </div>
+//          )}
+//       </>
+//    )
+// }
+
+// export default App
+
+
+               {/* <button onClick={handleButton} className="flex items-center cursor-pointer">
+                  Workplace
+                  <KeyboardArrowDownIcon className="mt-0.75"/>
+               </button> */}
+
+         {/* {workplaceOpen && (
+         <div className="bg-black w-96 h-screen transform transition-transform duration-300">
+            <div className="flex gap-10">
+               <h1>Your boards</h1>
+               <button className="cursor-pointer">+</button>
+            </div>
+         </div>
+         )} */}
 
 // import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
