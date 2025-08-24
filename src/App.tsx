@@ -6,6 +6,7 @@ function App() {
     const [loginOpen, setLoginOpen] = useState(false);
     const [registerOpen, setRegisterOpen] = useState(false);
     const [workplaceOpen, setWorkplaceOpen] = useState(false);
+    const [theme, setTheme] = useState(false);
 
     return (
         <>
@@ -14,6 +15,8 @@ function App() {
                 setWorkplaceOpen={setWorkplaceOpen}
                 setLoginOpen={setLoginOpen}
                 setRegisterOpen={setRegisterOpen}
+                theme={theme}
+                setTheme={setTheme}
             />
             <SideNavigation workplaceOpen={workplaceOpen} />
             
