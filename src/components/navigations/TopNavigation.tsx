@@ -7,8 +7,8 @@ interface TopNavigationProps {
     setWorkplaceOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setLoginOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setRegisterOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    theme: boolean;
-    setTheme: React.Dispatch<React.SetStateAction<boolean>>;
+    theme: string;
+    setTheme: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TopNavigation: React.FC<TopNavigationProps> = ({
@@ -24,30 +24,30 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
     };
 
     const handleThemeButton = () => {
-        setTheme((prev) => !prev);
+        const newTheme = theme === "light" ? "dark" : "light";
+        setTheme(newTheme);
+        document.documentElement.setAttribute("data-theme", newTheme);
     };
 
     return (
-        <div className="absolute w-screen z-1 bg-white shadow-sm flex justify-between items-center p-2.5 pl-40 pr-40 text-white ">
+        <div className="absolute w-screen z-1 shadow-sm flex justify-between items-center p-2.5 pl-40 pr-40" style={{backgroundColor: "var(--navbar)"}}>
             <div className="flex gap-9">
-                <h1 className="text-2xl cursor-pointer text-gray-900">Boardify</h1>
-                <button
-                onClick={handleWorkplaceButton}
-                className="flex items-center cursor-pointer text-gray-900"
-                >
-                Workplace
-                <KeyboardArrowDownIcon
-                    className={`ml-1 transform transition-transform duration-300 text-gray-900 ${
-                    workplaceOpen ? "rotate-180" : "rotate-0"
-                    }`}/>
+                <h1 className="text-2xl cursor-pointer" style={{color: "var(--text)"}}>Boardify</h1>
+                <button onClick={handleWorkplaceButton} className="flex items-center cursor-pointer" style={{color: "var(--text)"}}>
+                    Workplace
+                    <KeyboardArrowDownIcon className={`ml-1 transform transition-transform duration-300 ${workplaceOpen ? "rotate-180" : "rotate-0"}`} style={{color: "var(--text)"}}/>
                 </button>
             </div>
             <div className="flex gap-7.5">
                 <button onClick={handleThemeButton}>
-                    {theme ? <LightModeIcon className="cursor-pointer text-gray-900" /> : <DarkModeIcon className="cursor-pointer text-gray-900"/>}
+                    {theme === "dark" ? (
+                        <LightModeIcon className="cursor-pointer" style={{color: "var(--text)"}}/>
+                    ) : ( 
+                        <DarkModeIcon className="cursor-pointer" style={{color: "var(--text)"}}/>
+                    )}
                 </button>
-                <button className="cursor-pointer text-gray-900" onClick={() => setLoginOpen(true)}>Login</button>
-                <button className="cursor-pointer text-gray-900" onClick={() => setRegisterOpen(true)}>Register</button>
+                <button className="cursor-pointer" style={{color: "var(--text)"}} onClick={() => setLoginOpen(true)}>Login</button>
+                <button className="cursor-pointer" style={{color: "var(--text)"}} onClick={() => setRegisterOpen(true)}>Register</button>
             </div>
         </div>
     );
