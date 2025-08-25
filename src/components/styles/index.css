@@ -58,19 +58,3 @@ body {
   min-width: 300px;
   text-align: center;
 }
-
-#text {
-  color: var(--text);
-}
-
-#background {
-  color: var(--bg);
-}
-
-#navigationBar {
-  color: var(--navbar);
-}
-
-#ddnb {
-  color: var(--sidenav);
-}
