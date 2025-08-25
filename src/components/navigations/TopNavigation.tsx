@@ -1,6 +1,7 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from '@mui/icons-material/LightMode';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 interface TopNavigationProps {
     workplaceOpen: boolean;
@@ -48,6 +49,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
                 </button>
                 <button className="cursor-pointer" style={{color: "var(--text)"}} onClick={() => setLoginOpen(true)}>Login</button>
                 <button className="cursor-pointer" style={{color: "var(--text)"}} onClick={() => setRegisterOpen(true)}>Register</button>
+                <button><LogoutIcon className="cursor-pointer" style={{color: "var(--text)"}}></LogoutIcon></button>
             </div>
         </div>
     );
