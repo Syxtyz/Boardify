@@ -1,6 +1,8 @@
 import { useState } from "react";
 import TopNavigation from "./components/navigations/TopNavigation";
 import SideNavigation from "./components/navigations/SideNavigation";
+import RegisterModal from "./components/screens/registerModal";
+import LoginModal from "./components/screens/loginModal";
 
 function App() {
     const [loginOpen, setLoginOpen] = useState(false);
@@ -19,24 +21,10 @@ function App() {
                 setTheme={setTheme}
             />
             <SideNavigation workplaceOpen={workplaceOpen} />
-            
-            {loginOpen && (
-                <div className="modalOverlay">
-                    <div className="modalContent">
-                        <h1>Login Form</h1>
-                        <button onClick={() => setLoginOpen(false)}>Close</button>
-                    </div>
-                </div>
-            )}
 
-            {registerOpen && (
-                <div className="modalOverlay">
-                    <div className="modalContent">
-                        <h1>Register Form</h1>
-                        <button onClick={() => setRegisterOpen(false)}>Close</button>
-                    </div>
-                </div>
-            )}
+            <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)}/>
+
+            <RegisterModal isOpen={registerOpen} onClose={() => setRegisterOpen(false)} />
         </>
     );
 }

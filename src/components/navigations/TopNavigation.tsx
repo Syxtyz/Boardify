@@ -31,7 +31,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
     };
 
     return (
-        <div className="absolute w-screen z-1 shadow-sm flex justify-between items-center p-2.5 pl-40 pr-40" id="background">
+        <div className="fixed z-2 w-screen shadow-sm flex justify-between items-center p-2.5 pl-40 pr-40" id="topNavigation">
             <div className="flex gap-9">
                 <h1 className="text-2xl cursor-pointer" id="text">Boardify</h1>
                 <button onClick={handleWorkplaceButton} className="flex items-center cursor-pointer" id="text">
@@ -42,14 +42,14 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
             <div className="flex gap-7.5">
                 <button onClick={handleThemeButton}>
                     {theme === "dark" ? (
-                        <LightModeIcon className="cursor-pointer" id="icons"/>
+                        <LightModeIcon className="cursor-pointer" id="text"/>
                     ) : ( 
-                        <DarkModeIcon className="cursor-pointer" id="icons"/>
+                        <DarkModeIcon className="cursor-pointer" id="text"/>
                     )}
                 </button>
-                <button className="cursor-pointer" id="icons" onClick={() => setLoginOpen(true)}>Login</button>
-                <button className="cursor-pointer" id="icons" onClick={() => setRegisterOpen(true)}>Register</button>
-                <button><LogoutIcon className="cursor-pointer" id="icons"></LogoutIcon></button>
+                <button className="cursor-pointer" id="text" onClick={() => setLoginOpen(true)}>Login</button>
+                <button className="cursor-pointer" id="text" onClick={() => setRegisterOpen(true)}>Register</button>
+                <button><LogoutIcon className="cursor-pointer" id="text"></LogoutIcon></button>
             </div>
         </div>
     );
