@@ -10,10 +10,10 @@ export default function ThemeButton() {
                 onClick={toggleTheme}
                 className="flex items-center gap-2 rounded-lg"
             >
-                {theme === 'light' ? (
-                    <DarkModeIcon className=""/>
+                {theme === "light" ? (
+                    <DarkModeIcon/>
                 ) : (
-                    <LightModeIcon className=""/>
+                    <LightModeIcon/>
                 )}
             </button>
         </>

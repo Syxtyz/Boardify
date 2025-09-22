@@ -10,11 +10,14 @@ body {
 }
 
 html.dark body {
-  background: black;
+  background-color: black;
   color: white;
 }
 
 html:not(.dark) body{
-  background: white;
+  background-color: white;
   color: black;
 }
+
+/* vscode-ignore: @custom-variant */
+@custom-variant dark (&:where(.dark, .dark *));

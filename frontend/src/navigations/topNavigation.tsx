@@ -1,16 +1,3 @@
-// import ThemeButton from "../components/themeButton"
-// import LoginModal from "../auths/login";
-
-// export default function TopNavigation() {
-
-//     return (
-//         <>
-//             <ThemeButton/>
-//             <button className="cursor-pointer"><LoginModal/></button>
-//         </>
-//     )
-// }
-
 import { useState } from "react";
 import ThemeButton from "../components/themeButton";
 import LoginModal from "../auths/login";
