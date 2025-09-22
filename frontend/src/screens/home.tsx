@@ -1,11 +1,15 @@
-import BurgerMenu from "../components/menu"
 import FooterContent from "../components/footer"
+import TopNavigation from "../navigations/topNavigation"
 
 export default function HomeScreen() {
     return (
         <>
-            <nav><BurgerMenu/></nav>
-            <main>Home Screen</main>
+            <nav><TopNavigation/></nav>
+
+            <main>
+                Home Screen
+            </main>
+
             <footer><FooterContent/></footer>
         </>
     )

@@ -1,6 +1,6 @@
 import HomeScreen from "./screens/home"
 import LandingScreen from "./screens/landing"
-
+import './index.css'
 
 function App() {
 

@@ -1,13 +1,16 @@
 import FooterContent from "../components/footer"
+import TopNavigation from "../navigations/topNavigation"
 
 export default function LandingScreen() {
     return (
-        <div className="w-screen">
-            <h1>Landing Screen</h1>
+        <>
+            <nav><TopNavigation/></nav>
 
-            <footer>
-                <FooterContent/>
-            </footer>
-        </div>
+            <main>
+                Landing Screen
+            </main>
+
+            <footer><FooterContent/></footer>
+        </>
     )
 }

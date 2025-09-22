@@ -1,0 +1,14 @@
+# Python / Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+.env
+*.log
+*.pot
+*.py[cod]
+*.swp
+*.DS_Store
+db.sqlite3
+data.json
