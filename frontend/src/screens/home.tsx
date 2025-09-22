@@ -4,11 +4,13 @@ import TopNavigation from "../navigations/topNavigation"
 export default function HomeScreen() {
     return (
         <>
-            <nav><TopNavigation/></nav>
+            <div className="h-screen">
+                <nav><TopNavigation/></nav>
 
-            <main>
-                Home Screen
-            </main>
+                <main className="p-4">
+                    Home Screen
+                </main>
+            </div>
 
             <footer><FooterContent/></footer>
         </>

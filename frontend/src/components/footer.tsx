@@ -1,7 +1,8 @@
 export default function FooterContent() {
     return (
         <>
-            <span className="">
+            <div className="border-t border-zinc-900 mx-4 dark:border-neutral-200"/>
+            <span className="text-sm py-2 px-8 items-center flex">
                 @ 2025 Cejie Refamonte. All rights reserved
             </span>
         </>

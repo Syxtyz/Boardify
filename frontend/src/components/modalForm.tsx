@@ -13,7 +13,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.3)] z-50">
-      <div className="absolute p-6 rounded-lg shadow-lg w-96 bg-white dark:bg-black">
+      <div className="absolute p-6 rounded-lg shadow-lg w-96 bg-white dark:bg-zinc-900">
         {children}
         <ArrowBackIcon
           onClick={onClose}

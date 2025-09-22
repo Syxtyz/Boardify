@@ -5,18 +5,15 @@
   margin: 0;
 }
 
-body {
-  transition: background-color .2s ease-in-out;
-}
-
 html.dark body {
-  background-color: black;
-  color: white;
+  background-color: #09090b;
+  color: #e5e5e5;
+  /* neutral-200 */
 }
 
 html:not(.dark) body{
-  background-color: white;
-  color: black;
+  background-color: #f8f8f8;
+  color: #111827;
 }
 
 /* vscode-ignore: @custom-variant */

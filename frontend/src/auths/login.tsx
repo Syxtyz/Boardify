@@ -24,33 +24,33 @@ export default function LoginModal() {
   };
 
   return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <h1 className="text-2xl font-bold mb-4 self-center">Login Form</h1>
-          <input
-            type="email"
-            placeholder="Email"
-            className="border p-2 rounded"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="border p-2 rounded"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            className="border p-2 rounded hover:bg-blue-600 hover:text-white cursor-pointer"
-            disabled={loading}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-          {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
-          {data?.message && <p className="mt-2 text-sm">{data.message}</p>}
-        </form>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <h1 className="text-2xl font-bold mb-4 self-center">Login Form</h1>
+      <input
+        type="email"
+        placeholder="Email"
+        className="border p-2 rounded"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        className="border p-2 rounded"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <button
+        type="submit"
+        className="border p-2 rounded hover:bg-blue-600 hover:text-white cursor-pointer"
+        disabled={loading}
+      >
+        {loading ? "Logging in..." : "Login"}
+      </button>
+      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+      {data?.message && <p className="mt-2 text-sm">{data.message}</p>}
+    </form>
   );
 }

@@ -8,7 +8,7 @@ export default function ThemeButton() {
         <>
             <button
                 onClick={toggleTheme}
-                className="flex items-center gap-2 rounded-lg"
+                className="flex items-center gap-2 rounded-lg cursor-pointer"
             >
                 {theme === "light" ? (
                     <DarkModeIcon/>
