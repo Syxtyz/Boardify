@@ -17,7 +17,7 @@ export default function RegisterModal() {
     });
 
     if (result) {
-      login(result.email);
+      login(result.userId, result.userEmail);
       setEmail("");
       setPassword("");
     }

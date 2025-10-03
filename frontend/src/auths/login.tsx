@@ -16,8 +16,10 @@ export default function LoginModal() {
       body: { email, password },
     });
 
+    console.log("Login API result:", result);
+
     if (result) {
-      login(result.email);
+      login(result.userId, result.userEmail);
       setEmail("");
       setPassword("");
     }
