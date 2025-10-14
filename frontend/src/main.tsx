@@ -1,8 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { AuthProvider } from './contexts/authContext.tsx'
 import App from './App.tsx'
-import { AuthProvider } from './hooks/authProvider.tsx'
 
 const queryClient = new QueryClient();
 

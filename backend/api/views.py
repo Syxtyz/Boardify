@@ -1,58 +1,75 @@
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .models import Board
-from rest_framework import status
-from .serializers import UserSerializer, BoardSerializer
-from django.contrib.auth.hashers import make_password, check_password
+from rest_framework import generics, permissions
+from .models import Board, List, Card
+from .serializers import UserSerializer, RegisterSerializer, BoardSerializer, ListSerializer, CardSerializer
 from django.contrib.auth.models import User
 
+# Create your views here.
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.IsAdminUser]
 
-@api_view(['GET'])
-def users(request):
-    users = User.objects.all()
-    serializedData = UserSerializer(users, many=True).data
-    return Response(serializedData)
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
 
-@api_view(['POST'])
-def login(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
+class BoardCreate(generics.ListCreateAPIView):
+    serializer_class = BoardSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    try:
-        user = User.objects.get(email=email)
+    def get_queryset(self):
+        return Board.objects.filter(owner=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
-        if check_password(password, user.password):
-            return Response ({'message': 'Login successful', 'userEmail': user.email, 'userId': user.id}, status=status.HTTP_200_OK)
-        else:
-            return Response ({'message': 'Invalid email or password'}, status=status.HTTP_401_UNAUTHORIZED)
-    except User.DoesNotExist:
-        return Response ({'message': 'Invalid email or password'}, status=status.HTTP_401_UNAUTHORIZED)
+class BoardDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = BoardSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-@api_view(['POST'])
-def register(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
+    def get_queryset(self):
+        return Board.objects.filter(owner=self.request.user)
+    
+class ListCreate(generics.ListCreateAPIView):
+    serializer_class = ListSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    if User.objects.filter(email=email).exists():
-        return Response({'message': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        board_id = self.kwargs['board_id']
+        return List.objects.filter(board__id=board_id, board__owner=self.request.user)
+    
+    def perform_create(self, serializer):
+        board_id = self.kwargs['board_id']
+        board = Board.objects.get(id=board_id, owner=self.request.user)
+        serializer.save(board=board)
 
-    hashed_password = make_password(password)
-    new_user_info = User(email=email, password=hashed_password)
-    new_user_info.save()
+class ListDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ListSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    return Response({'message': f'Registered Successfully', 'email': new_user_info.email}, status=status.HTTP_201_CREATED)
+    def get_queryset(self):
+        board_id = self.kwargs['board_id']
+        return List.objects.filter(board__id=board_id, board__owner=self.request.user)
 
-@api_view(['GET'])
-def get_boards(request):
-    boards = Board.objects.all()
-    serializedData = BoardSerializer(boards, many=True).data
-    return Response(serializedData)
+    
+class CardCreate(generics.ListCreateAPIView):
+    serializer_class = CardSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-@api_view(['POST'])
-def create_boards(request):
-    data = request.data
-    serializer = BoardSerializer(data=data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        list_id = self.kwargs['list_id']
+        return Card.objects.filter(list__id=list_id, list__board__owner=self.request.user)
+
+    def perform_create(self, serializer):
+        list_id = self.kwargs['list_id']
+        list_obj = List.objects.get(id=list_id, board__owner=self.request.user)
+        serializer.save(list=list_obj)
+
+class CardDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CardSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        list_id = self.kwargs['list_id']
+        return Card.objects.filter(list__id=list_id, list__board__owner=self.request.user)

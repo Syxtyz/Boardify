@@ -1,5 +1,4 @@
-// components/ui/Modal.tsx
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface ModalProps {

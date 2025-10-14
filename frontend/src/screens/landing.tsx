@@ -1,5 +1,5 @@
-import FooterContent from "../components/footer"
-import TopNavigation from "../navigations/topNavigation"
+import FooterContent from "../components/footerContent"
+import TopNavigation from "../navigations/top"
 
 export default function LandingScreen() {
     return (

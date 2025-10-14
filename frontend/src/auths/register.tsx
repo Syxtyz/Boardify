@@ -1,31 +1,73 @@
 import { useState } from "react";
-import { useFetch } from "../hooks/useFetch";
+import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 
-export default function RegisterModal() {
+export default function Register() {
+  const { login } = useAuth();
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { data, error, loading, request } = useFetch();
-  const { login } = useAuth();
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
-    const result = await request("http://127.0.0.1:8000/users/register/", {
-      method: 'POST',
-      body: { email, password },
-    });
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-    if (result) {
-      login(result.userId, result.userEmail);
-      setEmail("");
-      setPassword("");
+    setLoading(true);
+
+    try {
+      const res = await axios.post("http://127.0.0.1:8000/api/register/", {
+        username,
+        email,
+        password,
+      });
+
+      console.log("Registration success:", res.data);
+      
+      const loginRes = await axios.post("http://127.0.0.1:8000/api/auth/login/", {
+        username,
+        password,
+      });
+
+      login(loginRes.data.access, loginRes.data.refresh);
+
+    } catch (err: any) {
+      console.error("Registration error:", err.response?.data || err.message);
+      setError(
+        err.response?.data?.detail ||
+          err.response?.data?.error ||
+          "Registration failed"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-      <h1 className="text-2xl font-bold mb-4 self-center">Register Form</h1>
+    <form
+      onSubmit={handleRegister}
+      className="flex flex-col gap-4 p-4 w-80 mx-auto mt-10 bg-white rounded-lg shadow"
+    >
+      <h2 className="text-xl font-semibold text-center">Register</h2>
+
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+      <input
+        type="text"
+        placeholder="Username"
+        className="border p-2 rounded"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+      />
+
       <input
         type="email"
         placeholder="Email"
@@ -34,6 +76,7 @@ export default function RegisterModal() {
         onChange={(e) => setEmail(e.target.value)}
         required
       />
+
       <input
         type="password"
         placeholder="Password"
@@ -42,15 +85,25 @@ export default function RegisterModal() {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
+
+      <input
+        type="password"
+        placeholder="Confirm Password"
+        className="border p-2 rounded"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        required
+      />
+
       <button
         type="submit"
-        className="border p-2 rounded hover:bg-green-600 hover:text-white cursor-pointer"
         disabled={loading}
+        className={`bg-blue-500 text-white py-2 rounded transition ${
+          loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+        }`}
       >
         {loading ? "Registering..." : "Register"}
       </button>
-      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
-      {data?.message && <p className="mt-2 text-sm">{data.message}</p>}
     </form>
   );
 }
