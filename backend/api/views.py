@@ -1,7 +1,11 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from .models import Board, List, Card
 from .serializers import UserSerializer, RegisterSerializer, BoardSerializer, ListSerializer, CardSerializer
 from django.contrib.auth.models import User
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import NotFound
 
 # Create your views here.
 class UserList(generics.ListAPIView):
@@ -30,6 +34,37 @@ class BoardDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Board.objects.filter(owner=self.request.user)
+    
+class PublicBoardView(generics.RetrieveAPIView):
+    serializer_class = BoardSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_object(self):
+        public_id = self.kwargs['public_id']
+        board = Board.objects.filter(public_id=public_id, is_public=True).first()
+        if not board:
+            raise NotFound(detail='This board is private or does not exist.')
+        return board
+    
+class ToggleBoardPublicView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        board = get_object_or_404(Board, pk=pk, owner=self.request.user)
+        board.is_public = not board.is_public
+        board.save()
+
+        serializer = BoardSerializer(board, context={'request': request})
+
+        if board.is_public:
+            message = "Board is now public."
+        else:
+            message = "Board is now private."
+
+        return Response({
+            "message": message,
+            "board": serializer.data
+        }, status=status.HTTP_200_OK)
     
 class ListCreate(generics.ListCreateAPIView):
     serializer_class = ListSerializer

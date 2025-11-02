@@ -1,16 +1,139 @@
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import FooterContent from "../components/footerContent"
-import TopNavigation from "../navigations/top"
+import TopNavigation from "../components/topNavigation/navigation"
+import { motion, type Variants } from "framer-motion"
+import { ArrowRightIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 
 export default function LandingScreen() {
+    const fadeInUp: Variants = {
+        hidden: { opacity: 0, y: 20 },
+        show: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
+        },
+    }
+
+    const featureFade: Variants = {
+        hidden: { opacity: 0, y: 30 },
+        show: (i) => ({
+            opacity: 1,
+            y: 0,
+            transition: { delay: i * 0.2, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
+        }),
+    }
+
     return (
         <>
             <nav className="fixed top-0 left-0 w-full"><TopNavigation/></nav>
 
-            <main className="min-h-[calc(100vh-3rem)] p-4 mt-12 flex">
-                <div className="bg-red-500">Landing Screen</div>
-            </main>
+            <ScrollArea className="h-[calc(100vh-3rem)] mt-12">
+                <main className="flex flex-col">
+                    <section className="flex flex-col items-center justify-center text-center px-4 py-24 from-background via-muted/50 to-background">
+                        <motion.h2
+                            className="text-5xl font-bold tracking-tight mb-4"
+                            variants={fadeInUp}
+                            initial="hidden"
+                            animate="show"
+                        >
+                            Organize your work, <br /> the <span className="text-blue-500">Boardify</span> way.
+                        </motion.h2>
 
-            <footer><FooterContent/></footer>
+                        <motion.p
+                            className="text-muted-foreground max-w-md mb-6"
+                            variants={fadeInUp}
+                            initial="hidden"
+                            animate="show"
+                            transition={{ delay: 0.3 }}
+                        >
+                            Plan smarter, collaborate faster, and keep every task right where you need it.
+                        </motion.p>
+
+                        <motion.div
+                            variants={fadeInUp}
+                            initial="hidden"
+                            animate="show"
+                            transition={{ delay: 0.6 }}
+                        >
+                            <Button size="lg" className="flex items-center gap-2 hover:bg-zinc-600 cursor-pointer">
+                                Get Started <ArrowRightIcon className="w-4 h-4" />
+                            </Button>
+                        </motion.div>
+                    </section>
+
+                    <section className="pt-20 px-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        {[
+                            { title: "Boards & Lists", desc: "Stay organized with flexible boards and draggable lists." },
+                            { title: "Collaboration", desc: "Invite teammates and track progress in real-time." },
+                            { title: "Customization", desc: "Adapt your workflow with themes, filters, and more." },
+                        ].map((feature, i) => (
+                            <motion.div
+                                key={i}
+                                custom={i}
+                                variants={featureFade}
+                                initial="hidden"
+                                whileInView="show"
+                                viewport={{ once: true }}
+                            >
+                                <Card className="shadow-md hover:shadow-lg border border-border/40">
+                                    <CardContent className="p-6 text-center">
+                                        <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
+                                        <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </section>
+
+                    <section className="pt-20 text-center px-8">
+                        <h2 className="text-3xl font-bold mb-8">How It Works</h2>
+                        <div className="grid sm:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                            {[
+                                { step: "1", title: "Create a Board", desc: "Start fresh with your own workspace." },
+                                { step: "2", title: "Add Lists & Cards", desc: "Organize your workflow into tasks and subtasks." },
+                                { step: "3", title: "Track Progress", desc: "Collaborate, move cards, and stay updated in real time." },
+                            ].map((step, i) => (
+                                <motion.div
+                                    key={i}
+                                    custom={i}
+                                    variants={featureFade}
+                                    initial="hidden"
+                                    whileInView="show"
+                                    viewport={{ once: true }}
+                                >
+                                    <div className="p-6 border rounded-lg bg-background shadow-sm h-full">
+                                        <div className="w-10 h-10 mx-auto mb-4 flex items-center justify-center bg-blue-500 text-white font-bold rounded-full">
+                                            {step.step}
+                                        </div>
+                                        <h3 className="font-semibold mb-2">{step.title}</h3>
+                                        <p className="text-sm text-muted-foreground">{step.desc}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </section>
+ 
+                    <section className="py-20 text-center px-8">
+                        <h2 className="text-3xl font-bold mb-4">Ready to Get Organized?</h2>
+                        <p className="mb-6 max-w-md mx-auto">
+                            Start using Boardify today — it's free to begin, simple to master.
+                        </p>
+                        <Button
+                            size="lg"
+                            className="font-semibold hover:bg-gray-100"
+                        >
+                            Start for Free <ArrowRightIcon className="ml-2 w-4 h-4" />
+                        </Button>
+                    </section>
+                </main>
+
+                <footer>
+                    <FooterContent />
+                </footer>
+                <ScrollBar orientation="vertical" />
+            </ScrollArea>
         </>
     )
 }

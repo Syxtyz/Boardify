@@ -1,31 +1,30 @@
-import FooterContent from "../components/footerContent";
-import TopNavigation from "../navigations/top";
-import { useState } from "react";
-import type { Board } from "../types/interfaces/data";
+import TopNavigation from "../components/topNavigation/navigation";
 import BoardView from "../components/homeContent/boardView";
+import { BoardStore } from "@/lib/stores/boardStore";
+import { useEffect } from "react";
 
 export default function HomeScreen() {
-  const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
+  const { selectedBoard, fetchBoards } = BoardStore();
+
+  useEffect(() => {
+    fetchBoards();
+  }, [fetchBoards]);
 
   return (
     <>
       <nav>
-        <TopNavigation onBoardSelect={setSelectedBoard} />
+        <TopNavigation/>
       </nav>
 
-      <main className="p-4 min-h-[calc(100vh-3rem)] flex flex-col gap-4">
-        {!selectedBoard ? (
-          <div className="text-center mt-10">
-            <h1>No board selected</h1>
-          </div>
-        ) : (
-          <BoardView selectedBoard={selectedBoard} />
-        )}
+      <main className="min-h-[calc(100vh-3rem)]">
+          {!selectedBoard ? (
+            <div className="flex justify-center items-center center">
+              <h1 className="">No board selected</h1>
+            </div>
+          ) : (
+            <BoardView/>
+          )}
       </main>
-
-      <footer>
-        <FooterContent />
-      </footer>
     </>
   );
 }

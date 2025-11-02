@@ -1,9 +1,11 @@
 import { createContext, useState, useEffect, useRef, type ReactNode } from "react";
 import axios from "axios";
+import { BaseUrl } from "@/lib/helper/urls";
 
 export const api = axios.create({ 
-    baseURL: "http://127.0.0.1:8000/api/",
+    baseURL: BaseUrl,
 });
+
 
 interface AuthContextProps {
   isLoggedIn: boolean;
@@ -70,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         try {
-          const res = await axios.post("http://127.0.0.1:8000/api/auth/refresh/", {
+          const res = await axios.post("http://127.0.0.1:8000/api/refresh/", {
             refresh: currentRefresh,
           });
 

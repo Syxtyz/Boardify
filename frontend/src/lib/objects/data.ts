@@ -3,6 +3,9 @@ export interface Board {
     owner_id: number;
     title: string;
     created_at: number;
+    is_public: boolean;
+    public_id: number;
+    public_url?: string;
     lists: List[];
 }
 

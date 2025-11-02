@@ -1,23 +1,26 @@
 import AddIcon from "@mui/icons-material/Add";
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
+import { BoardStore } from "@/lib/stores/boardStore";
+import { ListStore } from "@/lib/stores/listStore";
 
 interface CreateBoardSectionProps {
   showInput: boolean;
   setShowInput: Dispatch<SetStateAction<boolean>>;
-  createBoard: (title: string) => void;
 }
 
-export default function CreateBoardSection({
-  showInput,
-  setShowInput,
-  createBoard,
-}: CreateBoardSectionProps) {
+export default function CreateBoardSection({ showInput, setShowInput }: CreateBoardSectionProps) {
+  const { createBoard } = BoardStore();
   const [title, setTitle] = useState("");
+  const { createList } = ListStore();
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!title.trim()) return;
-    createBoard(title.trim());
+    
+    const newBoard = await createBoard(title.trim());
+    if (newBoard.id) {
+      await createList(newBoard.id, "Untitled List");
+    }
     setTitle("");
     setShowInput(false);
   }
