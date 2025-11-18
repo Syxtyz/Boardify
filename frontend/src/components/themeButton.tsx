@@ -1,6 +1,6 @@
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from '@mui/icons-material/LightMode';
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../lib/hooks/useTheme";
 
 export default function ThemeButton() {
     const { theme, toggleTheme } = useTheme(); 

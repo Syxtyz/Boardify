@@ -1,11 +1,12 @@
 import { createContext, useState, useEffect, useRef, type ReactNode } from "react";
 import axios from "axios";
 import { BaseUrl } from "@/lib/helper/urls";
+import { getCurrentUser } from "../api/user";
+import { UserStore } from "../stores/userStore";
 
-export const api = axios.create({ 
-    baseURL: BaseUrl,
+export const api = axios.create({
+  baseURL: BaseUrl,
 });
-
 
 interface AuthContextProps {
   isLoggedIn: boolean;
@@ -35,11 +36,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (savedRefresh) setRefreshToken(savedRefresh);
   }, []);
 
-  const login = (access: string, refresh: string) => {
+  const login = async (access: string, refresh: string) => {
     setAccessToken(access);
     setRefreshToken(refresh);
+    accessTokenRef.current = access;  // <-- update ref immediately
+    refreshTokenRef.current = refresh;
     localStorage.setItem("accessToken", access);
     localStorage.setItem("refreshToken", refresh);
+
+    try {
+      const user = await getCurrentUser()
+      UserStore.getState().setUser(user)
+    } catch (e) {
+      console.error("Failed to fetch user after login:", e);
+      UserStore.getState().setUser(null);
+    }
   };
 
   const logout = () => {
@@ -47,14 +58,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setRefreshToken(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    window.location.reload();
+    UserStore.getState().clearUser()
   };
 
   api.interceptors.request.use((config) => {
-      if (accessTokenRef.current && config.headers) {
-          config.headers.Authorization = `Bearer ${accessTokenRef.current}`;
-      }
-      return config;
+    if (accessTokenRef.current && config.headers) {
+      config.headers.Authorization = `Bearer ${accessTokenRef.current}`;
+    }
+    return config;
   });
 
   api.interceptors.response.use(

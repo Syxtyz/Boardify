@@ -1,14 +1,21 @@
 import LoginForm from "@/app/(auth)/loginForm";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import type { ReactNode } from "react";
 
-export default function LoginButton() {
+interface LoginButtonProps {
+    children: ReactNode
+    variant: "default" | "outline" | "ghost" | "secondary" | "destructive" | "link"
+    size?: "default" | "sm" | "lg" | "icon"
+}
+
+export default function LoginButton({children, variant , size}: LoginButtonProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Login</Button>
+                <Button variant={variant} size={size}>{children}</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle className="self-center">Login</DialogTitle>
                     <DialogDescription>Enter your login credentials</DialogDescription>

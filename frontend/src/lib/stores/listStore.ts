@@ -1,4 +1,4 @@
-import { api } from "@/contexts/authContext"
+import { api } from "@/lib/contexts/authContext"
 import { create } from "zustand"
 import { type List } from "../objects/data"
 
@@ -9,7 +9,6 @@ interface ListProps {
     selectedList: List | null
     fetchLists: (boardId: number) => Promise<void>
     fetchListById: (boardId: number, listId: number) => Promise<void>
-    createList: (boardId: number, title: string) => Promise<void>
     updateList: (boardId: number, listId: number, title: string) => Promise<void>
     deleteList: (boardId: number, listId: number) => Promise<void>
     clearSelectedList: () => void;
@@ -36,16 +35,6 @@ export const ListStore = create<ListProps>((set, get) => ({
         try {
             const res = await api.get(`/boards/${boardId}/lists/${listId}/`)
             set({ selectedList: res.data, loading: false })
-        } catch (e: any) {
-            set({ error: e.message, loading: false })
-        }
-    },
-
-    createList: async (boardId, title) => {
-        set({ error: null, loading: true })
-        try {
-            const res = await api.post(`/boards/${boardId}/lists/`, { title })
-            set({ lists: [...get().lists, res.data], loading: false})
         } catch (e: any) {
             set({ error: e.message, loading: false })
         }

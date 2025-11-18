@@ -1,14 +1,9 @@
 import TopNavigation from "../components/topNavigation/navigation";
 import BoardView from "../components/homeContent/boardView";
 import { BoardStore } from "@/lib/stores/boardStore";
-import { useEffect } from "react";
 
 export default function HomeScreen() {
-  const { selectedBoard, fetchBoards } = BoardStore();
-
-  useEffect(() => {
-    fetchBoards();
-  }, [fetchBoards]);
+  const { selectedBoard } = BoardStore();
 
   return (
     <>

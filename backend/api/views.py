@@ -1,11 +1,13 @@
 from rest_framework import generics, permissions, status
 from .models import Board, List, Card
-from .serializers import UserSerializer, RegisterSerializer, BoardSerializer, ListSerializer, CardSerializer
+from .serializers import UserSerializer, RegisterSerializer, BoardSerializer, BoardShareSerializer, BoardUnshareSerializer, ListSerializer, CardSerializer
 from django.contrib.auth.models import User
+from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 class UserList(generics.ListAPIView):
@@ -13,6 +15,13 @@ class UserList(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
     # permission_classes = [permissions.IsAdminUser]
+
+class CurrentUserView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -23,7 +32,7 @@ class BoardCreate(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Board.objects.filter(owner=self.request.user)
+        return Board.objects.filter(Q(owner=self.request.user) | Q(shared_with=self.request.user)).distinct()
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -33,7 +42,7 @@ class BoardDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Board.objects.filter(owner=self.request.user)
+        return Board.objects.filter(Q(owner=self.request.user) | Q(shared_with=self.request.user)).distinct()
     
 class PublicBoardView(generics.RetrieveAPIView):
     serializer_class = BoardSerializer
@@ -46,7 +55,8 @@ class PublicBoardView(generics.RetrieveAPIView):
             raise NotFound(detail='This board is private or does not exist.')
         return board
     
-class ToggleBoardPublicView(APIView):
+class ToggleBoardPublicView(generics.GenericAPIView):
+    serializer_class = BoardSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
@@ -54,17 +64,51 @@ class ToggleBoardPublicView(APIView):
         board.is_public = not board.is_public
         board.save()
 
-        serializer = BoardSerializer(board, context={'request': request})
+        serializer = self.get_serializer(board)
+        
+        message = "Board is now public." if board.is_public else "Board is now private."
 
-        if board.is_public:
-            message = "Board is now public."
-        else:
-            message = "Board is now private."
+        return Response({ "message": message, "board": serializer.data }, status=status.HTTP_200_OK)
+    
+class ShareBoardView(generics.GenericAPIView):
+    serializer_class = BoardShareSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-        return Response({
-            "message": message,
-            "board": serializer.data
-        }, status=status.HTTP_200_OK)
+    def post(self, request, pk):
+        board = get_object_or_404(Board, pk=pk, owner=request.user)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+
+        try:
+            user_to_share = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        board.shared_with.add(user_to_share)
+        board.save()
+
+        response_serializer = BoardSerializer(board, context={"request": request})
+        return Response(response_serializer.data, status=status.HTTP_200_OK)
+    
+class UnshareBoardView(generics.GenericAPIView):
+    serializer_class = BoardUnshareSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        board = get_object_or_404(Board, pk=pk, owner=request.user)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user_id = serializer.validated_data['user_id']
+
+        try:
+            user_to_remove = User.objects.get(id=user_id)
+        except ObjectDoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        board.shared_with.remove(user_to_remove)
+        return Response({"message": f"Access removed for user ID {user_id}."}, status=status.HTTP_200_OK)
     
 class ListCreate(generics.ListCreateAPIView):
     serializer_class = ListSerializer
@@ -72,7 +116,7 @@ class ListCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         board_id = self.kwargs['board_id']
-        return List.objects.filter(board__id=board_id, board__owner=self.request.user)
+        return List.objects.filter(board__id=board_id).filter(Q(board__owner=self.request.user) | Q(board__shared_with=self.request.user)).distinct()
     
     def perform_create(self, serializer):
         board_id = self.kwargs['board_id']
@@ -85,16 +129,15 @@ class ListDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         board_id = self.kwargs['board_id']
-        return List.objects.filter(board__id=board_id, board__owner=self.request.user)
+        return List.objects.filter(board__id=board_id).filter(Q(board__owner=self.request.user) | Q(board__shared_with=self.request.user)).distinct()
 
-    
 class CardCreate(generics.ListCreateAPIView):
     serializer_class = CardSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         list_id = self.kwargs['list_id']
-        return Card.objects.filter(list__id=list_id, list__board__owner=self.request.user)
+        return Card.objects.filter(list__id=list_id).filter(Q(list__board__owner=self.request.user) | Q(list__board__shared_with=self.request.user)).distinct()
 
     def perform_create(self, serializer):
         list_id = self.kwargs['list_id']
@@ -107,4 +150,4 @@ class CardDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         list_id = self.kwargs['list_id']
-        return Card.objects.filter(list__id=list_id, list__board__owner=self.request.user)
+        return Card.objects.filter(list__id=list_id).filter(Q(list__board__owner=self.request.user) | Q(list__board__shared_with=self.request.user)).distinct()

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/lib/hooks/useAuth";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
@@ -55,7 +55,7 @@ export default function RegisterForm() {
             {error && <p className="text-red-500 text-sm text-center">{error}</p>}
             <Input id="username" placeholder="Username" type="text" {...form.register("username")}/>
             <Input id="email" placeholder="Email" type="email" {...form.register("email")} />
-            <Input id="password" placeholder="Password" type="password" {...form.register("password")} />
+            <Input id="password" placeholder="Password" type="password" {...form.register("password")}/>
             <Input id="confirmPassword" placeholder="Confirm Password" type="password" {...form.register("confirmPassword")} />
             <DialogFooter>
                 <Button type="submit" className="w-24">

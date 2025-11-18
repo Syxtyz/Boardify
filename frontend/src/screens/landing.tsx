@@ -5,8 +5,12 @@ import { motion, type Variants } from "framer-motion"
 import { ArrowRightIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import LoginButton from "@/components/topNavigation/loginButton"
+import { useRef } from "react"
 
 export default function LandingScreen() {
+    const topSection = useRef<HTMLElement | null>(null)
+
     const fadeInUp: Variants = {
         hidden: { opacity: 0, y: 20 },
         show: {
@@ -25,13 +29,17 @@ export default function LandingScreen() {
         }),
     }
 
+    const scrollToTop = () => {
+        topSection.current?.scrollIntoView({ behavior: "smooth" })
+    }
+
     return (
         <>
             <nav className="fixed top-0 left-0 w-full"><TopNavigation/></nav>
 
             <ScrollArea className="h-[calc(100vh-3rem)] mt-12">
                 <main className="flex flex-col">
-                    <section className="flex flex-col items-center justify-center text-center px-4 py-24 from-background via-muted/50 to-background">
+                    <section ref={topSection} className="flex flex-col items-center justify-center text-center px-4 py-24 from-background via-muted/50 to-background">
                         <motion.h2
                             className="text-5xl font-bold tracking-tight mb-4"
                             variants={fadeInUp}
@@ -57,9 +65,9 @@ export default function LandingScreen() {
                             animate="show"
                             transition={{ delay: 0.6 }}
                         >
-                            <Button size="lg" className="flex items-center gap-2 hover:bg-zinc-600 cursor-pointer">
-                                Get Started <ArrowRightIcon className="w-4 h-4" />
-                            </Button>
+                            <LoginButton variant="default" size="lg">
+                                Get Started <ArrowRightIcon className="w-4 h-4"/>
+                            </LoginButton>
                         </motion.div>
                     </section>
 
@@ -121,10 +129,11 @@ export default function LandingScreen() {
                             Start using Boardify today — it's free to begin, simple to master.
                         </p>
                         <Button
+                            onClick={scrollToTop}
                             size="lg"
                             className="font-semibold hover:bg-gray-100"
                         >
-                            Start for Free <ArrowRightIcon className="ml-2 w-4 h-4" />
+                            Start for Free <ArrowRightIcon className=" w-4 h-4" />
                         </Button>
                     </section>
                 </main>

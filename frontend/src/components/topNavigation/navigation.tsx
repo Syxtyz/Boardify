@@ -1,14 +1,14 @@
 import ThemeButton from "../themeButton";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../lib/hooks/useAuth";
 import SideNavigation from "../sideNavigation/navigation";
-import LoginButton from "@/components/topNavigation/loginButton";
+import LoginButton from "./loginButton";
 import RegisterButton from "./registerBtn";
 
 export default function TopNavigation() {
   const { isLoggedIn, logout } = useAuth();
 
   return (
-    <div className="dark:bg-black flex justify-between h-12 px-4 dark:shadow-2xl">
+    <div className="dark:bg-black flex justify-between h-12 px-4 dark:shadow-secondary shadow-sm">
       <div className="flex items-center gap-2">
           {isLoggedIn && <SideNavigation/>}
           <h1 className="font-bold text-lg">Boardify</h1>
@@ -19,7 +19,9 @@ export default function TopNavigation() {
 
         {!isLoggedIn ? (
           <>
-            <LoginButton/>
+            <LoginButton variant="outline" size="default">
+              Login
+            </LoginButton>
             <RegisterButton/>
 
             
@@ -41,13 +43,6 @@ export default function TopNavigation() {
             </button>
           </>
         )}
-
-        {/* <ModalForm isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)}>
-          <LoginModal />
-        </ModalForm> */}
-        {/* <ModalForm isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)}> */}
-          {/* <RegisterModal /> */}
-        {/* </ModalForm> */}
       </div>
     </div>
   );

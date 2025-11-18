@@ -24,7 +24,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
-        fields = ['id', 'list_id', 'title', 'description', 'created_at']
+        fields = ['id', 'list_id', 'title', 'card_type','description', 'checkbox_items', 'created_at']
         read_only_fields = ['id', 'list_id', 'created_at']
 
 class ListSerializer(serializers.ModelSerializer):
@@ -36,16 +36,24 @@ class ListSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'board_id', 'created_at', 'cards']
 
 class BoardSerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True)
     lists = ListSerializer(many=True, read_only=True)
     public_url = serializers.SerializerMethodField()
+    shared_users = UserSerializer(many=True, read_only=True, source='shared_with')
 
     class Meta:
         model = Board
-        fields = ['id', 'owner_id', 'title', 'created_at', 'is_public', 'public_id', 'public_url', 'lists']
-        read_only_fields = ['id', 'owner_id']
+        fields = ['id', 'owner', 'title', 'created_at', 'is_public', 'public_id', 'public_url', 'lists', 'shared_users']
+        read_only_fields = ['id', 'owner']
 
     def get_public_url(self, obj):
         request = self.context.get('request')
         if obj.is_public and request:
             return request.build_absolute_uri(f"/api/boards/public/{obj.public_id}/")
         return None
+    
+class BoardShareSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class BoardUnshareSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()

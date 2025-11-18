@@ -1,31 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { BoardStore } from "@/lib/stores/boardStore";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ThemeButton from "@/components/themeButton";
 import type { List, Card } from "@/lib/objects/data";
+import CardCheckboxList from "@/components/homeContent/chkBox";
+import { usePublicBoard } from "@/lib/hooks/useBoard";
 
 export default function PublicBoardScreen() {
     const { public_id } = useParams();
-    const { selectedBoard, fetchBoardByPublicId, loading, error } = BoardStore();
+    // const { selectedBoard, fetchBoardByPublicId } = BoardStore();
+    const { data: board, isLoading, isError } = usePublicBoard(public_id!)
 
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [selectedList, setSelectedList] = useState<List | null>(null);
 
-    useEffect(() => {
-        if (public_id) fetchBoardByPublicId(public_id);
-    }, [public_id]);
-
-    if (loading) return <div className="text-center mt-10">Loading board...</div>;
-    if (error) return <div className="text-red-500">{error}</div>;
-    if (!selectedBoard) return <div>No board found.</div>;
+    if (isLoading) return <div>Loading board...</div>
+    if (isError) return <div>Board not found or private.</div>
 
     return (
         <>
             <div className="flex justify-center items-center h-12 font-bold text-lg sm:text-xl md:text-2xl px-2 text-center relative">
-                {selectedBoard?.title}
+                {board.title}
                 <div className="absolute right-2">
                     <ThemeButton />
                 </div>
@@ -33,7 +30,7 @@ export default function PublicBoardScreen() {
 
             <ScrollArea className="h-[calc(100vh-3rem)]">
                 <div className="flex flex-row flex-wrap md:flex-nowrap items-start mx-2 gap-3 md:gap-4 justify-center md:justify-start mt-0.5">
-                    {selectedBoard?.lists.map((list) => (
+                    {board.lists.map((list: any) => (
                         <Dialog
                             key={list.id}
                             open={modalOpen && selectedList?.id === list.id}
@@ -57,7 +54,7 @@ export default function PublicBoardScreen() {
 
                                     <ScrollArea className="max-h-[calc(100vh-6.85rem)] overflow-y-auto flex flex-col pr-2">
                                         <div className="flex flex-col">
-                                            {list.cards.map((card) => (
+                                            {list.cards.map((card: any) => (
                                                 <div
                                                     key={card.id}
                                                     onClick={(e) => {
@@ -69,7 +66,9 @@ export default function PublicBoardScreen() {
                                                     className="flex flex-col bg-zinc-200 dark:bg-zinc-800 rounded cursor-pointer border hover:border-zinc-800 dark:hover:border-zinc-300 my-1 mx-1 p-2 text-sm sm:text-base"
                                                 >
                                                     <p className="font-medium break-all">{card.title}</p>
-                                                    <p className="text-sm text-gray-500 w-full truncate">{card.description}</p>
+                                                    <p className="text-sm text-gray-500 w-full truncate">{card.description}</p>{card.card_type === "checkbox" && card.checkbox_items?.length > 0 && (
+                                                        <CardCheckboxList items={card.checkbox_items} readOnly />
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>
@@ -114,7 +113,13 @@ export default function PublicBoardScreen() {
                                             <DialogHeader>
                                                 <DialogTitle>{selectedCard.title}</DialogTitle>
                                                 <DialogDescription className="text-gray-500 dark:text-gray-400 mt-2">
-                                                    {selectedCard.description || "No description available."}
+                                                    {selectedCard.card_type === "paragraph" ? (
+                                                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                                                            {selectedCard.description}
+                                                        </p>
+                                                    ) : (
+                                                        <CardCheckboxList items={selectedCard.checkbox_items} />
+                                                    )}
                                                 </DialogDescription>
                                             </DialogHeader>
                                         </>
