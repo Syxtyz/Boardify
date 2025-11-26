@@ -41,6 +41,15 @@ export default function BoardView() {
     if (selectedBoard) setLists(selectedBoard.lists)
   }, [selectedBoard?.id])
 
+  useEffect(() => {
+    if (!modalOpen) {
+      CardStore.getState().clearSelectedCard()
+      ListStore.getState().clearSelectedList()
+      setCreatingCardState(false)
+      setIsEditing(false)
+    }
+  }, [modalOpen])
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 1 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })

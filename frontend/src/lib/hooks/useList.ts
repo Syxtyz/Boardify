@@ -19,9 +19,7 @@ export const useReorderListMutation = (boardId: number) => {
   return useMutation({
     mutationFn: (lists: { id: number, order: number }[]) => reorderLists(lists),
     onSuccess: () => {
-      // Invalidate the board query so the latest data is fetched
       queryClient.invalidateQueries({ queryKey: ["board", boardId] });
-      toast.success("List reordered successfully!");
     },
     onError: () => {
       toast.error("Failed to reorder lists");
