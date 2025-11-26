@@ -151,3 +151,53 @@ class CardDetail(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         list_id = self.kwargs['list_id']
         return Card.objects.filter(list__id=list_id).filter(Q(list__board__owner=self.request.user) | Q(list__board__shared_with=self.request.user)).distinct()
+    
+class ReorderListsView(generics.GenericAPIView):
+    queryset = List.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        lists = request.data.get('lists', [])
+        user_boards = Board.objects.filter(Q(owner=request.user) | Q(shared_with=request.user))
+        for item in lists:
+            list_id = item.get('id')
+            new_order = item.get('order')
+
+            list_obj = List.objects.filter(
+                id=list_id,
+                board__in=user_boards
+            ).first()
+
+            if not list_obj:
+                continue
+
+            list_obj.order = new_order
+            list_obj.save(update_fields=['order'])
+        return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+
+class ReorderCardsView(generics.GenericAPIView):
+    queryset = Card.objects.all()
+    serializer_class = CardSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        cards = request.data.get('cards', [])
+
+        user_boards = Board.objects.filter(
+            Q(owner=request.user) | Q(shared_with=request.user)
+        )
+
+        for item in cards:
+            card = Card.objects.filter(
+                id=item['id'],
+                list__board__in=user_boards
+            ).first()
+
+            if not card:
+                continue
+
+            card.list_id = item['list']
+            card.order = item['order']
+            card.save(update_fields=['list', 'order'])
+            
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)

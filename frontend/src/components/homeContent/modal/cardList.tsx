@@ -3,16 +3,17 @@ import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/di
 import CreateCard from "../createCard";
 import { CardStore } from "@/lib/stores/cardStore";
 import type { List } from "@/lib/objects/data";
-import type { Dispatch, SetStateAction } from "react";
 
 interface CardListProps {
-    selectedList: List
+    selectedList: List | null
     setCreatingCard: (value: boolean) => void
-    setIsEditing: Dispatch<SetStateAction<boolean>>
+    setIsEditing: (value: boolean) => void
 }
 
 export default function CardList({ selectedList, setCreatingCard, setIsEditing }: CardListProps) {
     const { fetchCardById, clearSelectedCard, selectedCard } = CardStore();
+
+    if (!selectedList) return
 
     return (
         <div className="flex-1 pr-4 border-r border-zinc-300 dark:border-zinc-700">
@@ -27,8 +28,8 @@ export default function CardList({ selectedList, setCreatingCard, setIsEditing }
                         selectedList.cards.map((card) => (
                             <div
                                 key={card.id}
-                                onClick={() => {
-                                    fetchCardById(selectedList.board_id, selectedList.id, card.id);
+                                onClick={async () => {
+                                    await fetchCardById(selectedList.board_id, selectedList.id, card.id);
                                     setCreatingCard(false);
                                     setIsEditing(false);
                                 }}

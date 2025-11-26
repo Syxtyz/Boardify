@@ -44,3 +44,4 @@ export const unshareBoard = async (id: number, userId: number) => {
     const { data } = await api.post(`boards/${id}/unshare/`, { user_id: userId })
     return data
 }
+

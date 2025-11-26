@@ -69,7 +69,7 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
                     <DialogDescription>You can share this board with anyone.</DialogDescription>
                     <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2 mt-2">
                         <Input placeholder="Add people by their email address" {...register("email")} className="flex-1 text-sm" autoComplete="off" />
-                        <Button type="submit" size="icon"><PlusIcon /></Button>
+                        <Button type="submit" size="icon" className="cursor-pointer"><PlusIcon /></Button>
                     </form>
                     {errors.email && (
                         <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -110,6 +110,7 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
                                         size="icon"
                                         onClick={() => user?.id && handleUnshare(user.id)}
                                         disabled={unshareMutation.isPending}
+                                        className="cursor-pointer"
                                     >
                                         <XIcon className="w-4 h-4" />
                                     </Button>
@@ -121,7 +122,7 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
                 </div>
                 <div className="space-y-2">
                     <p className="font-medium text-sm">General Access</p>
-                    <Button variant="outline" size="sm" onClick={handleToggle}>
+                    <Button variant="outline" size="sm" onClick={handleToggle} className="cursor-pointer">
                         {selectedBoard?.is_public ? (
                             <>
                                 <GlobeLockIcon />

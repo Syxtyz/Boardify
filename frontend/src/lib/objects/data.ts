@@ -22,6 +22,7 @@ export interface List {
     board_id: number
     title: string
     created_at: number
+    order: number
     cards: Card[]
 }
 
@@ -38,4 +39,5 @@ export interface Card {
     description: string
     checkbox_items: CheckBoxItem[]
     created_at: string
+    order: number
 }

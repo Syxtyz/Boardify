@@ -24,15 +24,15 @@ class RegisterSerializer(serializers.ModelSerializer):
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
-        fields = ['id', 'list_id', 'title', 'card_type','description', 'checkbox_items', 'created_at']
-        read_only_fields = ['id', 'list_id', 'created_at']
+        fields = ['id', 'list_id', 'title', 'card_type','description', 'checkbox_items', 'created_at', 'order']
+        read_only_fields = ['id', 'created_at']
 
 class ListSerializer(serializers.ModelSerializer):
     cards = CardSerializer(many=True, read_only=True)
 
     class Meta:
         model = List
-        fields = ['id', 'board_id', 'title', 'created_at', 'cards']
+        fields = ['id', 'board_id', 'title', 'created_at', 'order', 'cards']
         read_only_fields = ['id', 'board_id', 'created_at', 'cards']
 
 class BoardSerializer(serializers.ModelSerializer):

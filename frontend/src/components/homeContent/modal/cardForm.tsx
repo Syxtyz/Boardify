@@ -12,7 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CardFormProps {
-    selectedList: List;
+    selectedList: List | null;
     isEditing?: boolean;
     onCancel: () => void;
 }
@@ -23,6 +23,8 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
     const [description, setDescription] = useState("");
     const [cardType, setCardType] = useState<"paragraph" | "checkbox" | undefined>(undefined);
     const [checkboxItems, setCheckboxItems] = useState<CheckBoxItem[]>([]);
+
+    if (!selectedList) return
 
     useEffect(() => {
         if (isEditing && selectedCard) {
@@ -83,20 +85,6 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
         },
         onError: () => toast.error("Failed to update card."),
     });
-
-    // const handleSave = async () => {
-    //     if (!title.trim()) return toast.warning("Please enter a title.")
-    //     if (!cardType) return toast.warning("Please select a card type.")
-
-    //     const data = { title, description, card_type: cardType, checkbox_items: checkboxItems };
-
-    //     if (isEditing && selectedCard) {
-    //         await updateCard(selectedList.board_id, selectedList.id, selectedCard.id, data);
-    //     } else {
-    //         await createCard(selectedList.board_id, selectedList.id, title, cardType, description, checkboxItems);
-    //     }
-    //     onCancel();
-    // };
 
     const handleSave = async () => {
         if (!title.trim()) return toast.warning("Please enter a title.");

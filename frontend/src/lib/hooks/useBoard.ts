@@ -85,12 +85,11 @@ export const useBoardToggleMutations = () => {
 }
 
 interface CreateBoardProps {
-  title: string
-  lists: string[]
+    title: string
+    lists: string[]
 }
 
 export const useCreateBoardMutation = () => {
-
     const createMutation = useMutation({
         mutationFn: async ({ title, lists }: CreateBoardProps) => {
             const newBoard = await createBoard(title.trim())
@@ -99,7 +98,7 @@ export const useCreateBoardMutation = () => {
             for (let i = 0; i < lists.length; i++) {
                 await createList(newBoard.id, lists[i])
             }
-            
+
             // await Promise.all(lists.map((list) => createList(newBoard.id, list)))
             const fullBoard = await fetchBoardById(newBoard.id)
             return fullBoard

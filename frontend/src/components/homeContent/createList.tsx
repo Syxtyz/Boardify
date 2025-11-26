@@ -46,8 +46,8 @@ export default function CreateList() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="w-full sm:w-64">
-          <button className="h-8 w-full sm:w-8 bg-zinc-200 dark:bg-zinc-800 group cursor-pointer flex items-center overflow-hidden rounded-lg hover:w-full sm:hover:w-64 transition-[width]">
+        <div className="w-full sm:w-64 pointer-events-none">
+          <button className="h-8 w-full sm:w-8 bg-zinc-200 dark:bg-zinc-800 group cursor-pointer flex items-center overflow-hidden rounded-lg hover:w-full sm:hover:w-64 transition-[width] pointer-events-auto">
             <div className="w-8 flex justify-center shrink-0">
               <AddIcon />
             </div>

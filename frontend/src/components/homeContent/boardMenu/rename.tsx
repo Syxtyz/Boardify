@@ -57,11 +57,11 @@ export default function RenameDialog({ open, onOpenChange }: BoardMenuProps) {
                     </FieldGroup>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="outline" className="w-16">
+                            <Button variant="outline" className="w-16 cursor-pointer">
                                 Cancel
                             </Button>
                         </DialogClose>
-                        <Button type="submit" className="w-16">
+                        <Button type="submit" className="w-16 cursor-pointer">
                             Save
                         </Button>
                     </DialogFooter>
