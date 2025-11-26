@@ -22,8 +22,7 @@ export const useUpdateMutation = () => {
 
 export const useUnshareBoard = () => {
     return useMutation({
-        mutationFn: ({ id, userId }: { id: number, userId: number }) =>
-            unshareBoard(id, userId),
+        mutationFn: ({ id, userId }: { id: number, userId: number }) => unshareBoard(id, userId),
         onSuccess: (_, { id, userId }) => {
             const board = BoardStore.getState().selectedBoard
             if (board && board.id === id) {
