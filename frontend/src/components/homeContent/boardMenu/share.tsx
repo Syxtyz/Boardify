@@ -28,6 +28,7 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
     const toggleMutation = useBoardToggleMutations()
     const currentUser = UserStore(state => state.user)
     const [loading, setLoading] = useState(false);
+    const owner = selectedBoard.owner.id !== currentUser?.id
 
     const {
         register,
@@ -41,61 +42,61 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
 
     // Refetch board from backend and update store
     const refreshBoard = async (showSkeleton: boolean = false) => {
-    if (!selectedBoard?.id) return;
-    try {
-        if (showSkeleton) setLoading(true);
-        const updatedBoard = await fetchBoardById(selectedBoard.id);
-        BoardStore.setState({ selectedBoard: updatedBoard });
-    } catch (err) {
-        toast.error("Failed to refresh board");
-    } finally {
-        if (showSkeleton) setLoading(false);
+        if (!selectedBoard?.id) return;
+        try {
+            if (showSkeleton) setLoading(true);
+            const updatedBoard = await fetchBoardById(selectedBoard.id);
+            BoardStore.setState({ selectedBoard: updatedBoard });
+        } catch (err) {
+            toast.error("Failed to refresh board");
+        } finally {
+            if (showSkeleton) setLoading(false);
+        }
     }
-}
 
 
     const handleToggle = async () => {
-    if (!selectedBoard?.id) return;
-    try {
-        await toggleMutation.mutateAsync(selectedBoard.id);
-        await refreshBoard(false); // don't show skeleton
-    } catch (err) {
-        toast.error("Failed to toggle board access");
+        if (!selectedBoard?.id) return;
+        try {
+            await toggleMutation.mutateAsync(selectedBoard.id);
+            await refreshBoard(false); // don't show skeleton
+        } catch (err) {
+            toast.error("Failed to toggle board access");
+        }
     }
-}
 
 
     const onSubmit = async (data: ShareFormValues) => {
-    if (!selectedBoard?.id) return;
-    try {
-        await shareMutation.mutateAsync({ id: selectedBoard.id, email: data.email });
-        reset();
-        toast.success("Access granted successfully");
-        await refreshBoard(true); // show skeleton for share
-    } catch (e: any) {
-        toast.error(e.response?.data?.message || "Failed to add email");
+        if (!selectedBoard?.id) return;
+        try {
+            await shareMutation.mutateAsync({ id: selectedBoard.id, email: data.email });
+            reset();
+            toast.success("Access granted successfully");
+            await refreshBoard(true); // show skeleton for share
+        } catch (e: any) {
+            toast.error(e.response?.data?.message || "Failed to add email");
+        }
     }
-}
 
     const handleUnshare = async (userId: number) => {
-    if (!selectedBoard?.id) return;
-    try {
-        await unshareMutation.mutateAsync({ id: selectedBoard.id, userId });
-        await refreshBoard(false); // don't show skeleton
-    } catch (e: any) {
-        toast.error("Failed to remove user");
+        if (!selectedBoard?.id) return;
+        try {
+            await unshareMutation.mutateAsync({ id: selectedBoard.id, userId });
+            await refreshBoard(false); // don't show skeleton
+        } catch (e: any) {
+            toast.error("Failed to remove user");
+        }
     }
-}
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader className="space-y-1">
                     <DialogTitle>Share Board "{selectedBoard?.title}"</DialogTitle>
-                    <DialogDescription>You can share this board with anyone.</DialogDescription>
+                    <DialogDescription>{owner ? "Only the owner can make changes." : "You can share this board with anyone."}</DialogDescription>
                     <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2 mt-2">
-                        <Input placeholder="Add people by their email address" {...register("email")} className="flex-1 text-sm" autoComplete="off" />
-                        <Button type="submit" size="icon" className="cursor-pointer"><PlusIcon /></Button>
+                        <Input placeholder="Add people by their email address" {...register("email")} className="flex-1 text-sm" autoComplete="off" disabled={owner} />
+                        <Button type="submit" size="icon" className="cursor-pointer" disabled={owner}><PlusIcon /></Button>
                     </form>
                     {errors.email && (
                         <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -120,12 +121,12 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
 
                     {loading ? (
                         <div className="flex items-center space-x-4 -ml-0.5">
-                            <Skeleton className="rounded-full h-6 w-6"/>
+                            <Skeleton className="rounded-full h-6 w-6" />
                             <div className="space-y-2 -ml-2">
-                                <Skeleton className="h-4 w-72"/>
-                                <Skeleton className="h-4 w-72"/>
+                                <Skeleton className="h-4 w-72" />
+                                <Skeleton className="h-4 w-72" />
                             </div>
-                            <Skeleton className="ml-1.5 h-8 w-8"/>
+                            <Skeleton className="ml-1.5 h-8 w-8" />
                         </div>
                     ) : (
                         Array.isArray(selectedBoard?.shared_users) && selectedBoard.shared_users.length > 0 ? (
@@ -143,15 +144,17 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
                                                 <p className="text-muted-foreground text-sm">{user.email ?? "No email"}</p>
                                             </div>
                                         </div>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => user?.id && handleUnshare(user.id)}
-                                            disabled={unshareMutation.isPending}
-                                            className="cursor-pointer"
-                                        >
-                                            <XIcon className="w-4 h-4" />
-                                        </Button>
+                                        {owner && (
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => user?.id && handleUnshare(user.id)}
+                                                disabled={unshareMutation.isPending}
+                                                className="cursor-pointer"
+                                            >
+                                                <XIcon className="w-4 h-4" />
+                                            </Button>
+                                        )}
                                     </div>
                                 ))
                         ) : (
@@ -162,7 +165,7 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
 
                 <div className="space-y-2">
                     <p className="font-medium text-sm">General Access</p>
-                    <Button variant="outline" size="sm" onClick={handleToggle} className="cursor-pointer">
+                    <Button variant="outline" size="sm" onClick={handleToggle} className="cursor-pointer" disabled={owner}>
                         {selectedBoard?.is_public ? (
                             <>
                                 <GlobeLockIcon />
@@ -202,8 +205,7 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
                         </div>
                     ) : (
                         <p className="text-sm text-muted-foreground mt-2">
-                            This board is private. Set it public to get a shareable link.<br />
-                            People with access can still view and edit this board.
+                            This board is private. {owner ? "Ask the owner to set it to public" : "Set it to public" } to get a shareable link. People with access can still view and edit this board.
                         </p>
                     )}
                 </div>
