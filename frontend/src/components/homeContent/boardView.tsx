@@ -190,25 +190,27 @@ export default function BoardView() {
         }}
         className="flex flex-col"
       >
-        <div {...attributes} {...listeners}>
+        <div className="flex items-center justify-between">
           <div
-            className="cursor-pointer bg-gray-200 dark:bg-zinc-800 rounded py-2 font-bold mb-2 pl-3 justify-between flex items-center"
+            {...attributes}
+            {...listeners}
+            className="cursor-pointer bg-gray-200 dark:bg-zinc-800 rounded py-2 font-bold mb-2 pl-3 w-64"
             onClick={(e) => {
               e.stopPropagation()
               openListModal(list.id)
             }}
           >
             {list.title}
-            <div
-              onClick={(e) => {
-                e.stopPropagation()
-                selectedBoard && fetchListById(selectedBoard.id, list.id)
-              }}
-            >
-              <ListMenu />
-            </div>
+          </div>
+
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="ml-2"
+          >
+            <ListMenu />
           </div>
         </div>
+
         <DroppableList list={list}>{children}</DroppableList>
       </div>
     )

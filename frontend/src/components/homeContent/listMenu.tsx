@@ -43,7 +43,7 @@ export function ListMenu() {
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" aria-label="Open menu" size="sm">
+          <Button variant="ghost" aria-label="Open menu" size="sm" className="inline-block -ml-12">
             <MoreHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
