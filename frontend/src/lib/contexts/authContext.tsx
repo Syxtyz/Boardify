@@ -3,6 +3,7 @@ import axios from "axios";
 import { BaseUrl } from "@/lib/helper/urls";
 import { getCurrentUser } from "../api/user";
 import { UserStore } from "../stores/userStore";
+import { BoardStore } from "../stores/boardStore";
 
 export const api = axios.create({
   baseURL: BaseUrl,
@@ -58,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setRefreshToken(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    BoardStore.getState().clearSelectedBoard()
     UserStore.getState().clearUser()
   };
 
