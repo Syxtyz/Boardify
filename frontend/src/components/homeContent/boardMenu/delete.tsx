@@ -3,13 +3,13 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useDeleteMutation } from "@/lib/hooks/useBoard"
-import type { BoardMenuProps } from "@/lib/objects/dialog"
+import type { MenuProps } from "@/lib/objects/dialog"
 import { deleteSchema, type DeleteFormValues } from "@/lib/schemas/board"
 import { BoardStore } from "@/lib/stores/boardStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-export default function DeleteDialog({ open, onOpenChange }: BoardMenuProps) {
+export default function DeleteDialog({ open, onOpenChange }: MenuProps) {
     const selectedBoard = BoardStore(state => state.selectedBoard)
     const deleteMutation = useDeleteMutation()
 

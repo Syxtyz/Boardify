@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useRef, type ReactNode } from "react";
 import axios from "axios";
 import { BaseUrl } from "@/lib/helper/urls";
-import { getCurrentUser } from "../api/user";
+import { getCurrentUser } from "../api/userAPI";
 import { UserStore } from "../stores/userStore";
 import { BoardStore } from "../stores/boardStore";
 

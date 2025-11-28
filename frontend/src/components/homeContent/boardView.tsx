@@ -39,7 +39,7 @@ export default function BoardView() {
 
   useEffect(() => {
     if (selectedBoard) setLists(selectedBoard.lists)
-  }, [selectedBoard?.id])
+  }, [selectedBoard])
 
   useEffect(() => {
     if (!modalOpen) {
@@ -65,6 +65,9 @@ export default function BoardView() {
       setLists(newLists)
       setActiveListId(null)
       reorderListsMutation.mutate(newLists.map((l, index) => ({ id: l.id, order: index })))
+      BoardStore.setState((state) => ({
+        selectedBoard: state.selectedBoard ? { ...state.selectedBoard, lists: newLists } : state.selectedBoard
+      }))
     },
     [lists, reorderListsMutation]
   )
@@ -113,6 +116,9 @@ export default function BoardView() {
       reorderCardsMutation.mutate(
         newLists.flatMap((list) => list.cards.map((c, i) => ({ id: c.id, list: list.id, order: i })))
       )
+      BoardStore.setState((state) => ({
+        selectedBoard: state.selectedBoard ? { ...state.selectedBoard, lists: newLists } : state.selectedBoard
+      }))
     },
     [lists, reorderCardsMutation]
   )
@@ -200,14 +206,14 @@ export default function BoardView() {
               openListModal(list.id)
             }}
           >
-            {list.title}
+            <p className="pr-8 truncate">{list.title}</p>
           </div>
 
           <div
             onClick={(e) => e.stopPropagation()}
             className="ml-2"
           >
-            <ListMenu />
+            <ListMenu list={list} />
           </div>
         </div>
 

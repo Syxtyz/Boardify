@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../queryClient";
-import { reorderCards } from "../api/card";
+import { reorderCards } from "../api/cardAPI";
 import { toast } from "sonner";
 
 export const useReorderCardMutation = (boardId: number) => {

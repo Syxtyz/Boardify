@@ -1,4 +1,4 @@
-import type { BoardMenuProps } from "@/lib/objects/dialog";
+import type { MenuProps } from "@/lib/objects/dialog";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input";
 import { CopyIcon, GlobeIcon, GlobeLockIcon, PlusIcon, User2Icon, XIcon } from "lucide-react";
@@ -21,14 +21,14 @@ const shareSchema = z.object({
 
 type ShareFormValues = z.infer<typeof shareSchema>
 
-export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
+export default function ShareDialog({ open, onOpenChange }: MenuProps) {
     const selectedBoard = BoardStore(state => state.selectedBoard)
     const shareMutation = useShareBoard()
     const unshareMutation = useUnshareBoard()
     const toggleMutation = useBoardToggleMutations()
     const currentUser = UserStore(state => state.user)
     const [loading, setLoading] = useState(false);
-    const owner = selectedBoard.owner.id !== currentUser?.id
+    const owner = selectedBoard.owner.id === currentUser?.id
 
     const {
         register,
@@ -95,8 +95,8 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
                     <DialogTitle>Share Board "{selectedBoard?.title}"</DialogTitle>
                     <DialogDescription>{owner ? "Only the owner can make changes." : "You can share this board with anyone."}</DialogDescription>
                     <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2 mt-2">
-                        <Input placeholder="Add people by their email address" {...register("email")} className="flex-1 text-sm" autoComplete="off" disabled={owner} />
-                        <Button type="submit" size="icon" className="cursor-pointer" disabled={owner}><PlusIcon /></Button>
+                        <Input placeholder="Add people by their email address" {...register("email")} className="flex-1 text-sm" autoComplete="off" disabled={!owner} />
+                        <Button type="submit" size="icon" className="cursor-pointer" disabled={!owner}><PlusIcon /></Button>
                     </form>
                     {errors.email && (
                         <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -165,7 +165,7 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
 
                 <div className="space-y-2">
                     <p className="font-medium text-sm">General Access</p>
-                    <Button variant="outline" size="sm" onClick={handleToggle} className="cursor-pointer" disabled={owner}>
+                    <Button variant="outline" size="sm" onClick={handleToggle} className="cursor-pointer" disabled={!owner}>
                         {selectedBoard?.is_public ? (
                             <>
                                 <GlobeLockIcon />
@@ -205,7 +205,7 @@ export default function ShareDialog({ open, onOpenChange }: BoardMenuProps) {
                         </div>
                     ) : (
                         <p className="text-sm text-muted-foreground mt-2">
-                            This board is private. {owner ? "Ask the owner to set it to public" : "Set it to public" } to get a shareable link. People with access can still view and edit this board.
+                            This board is private. {owner ? "Set it to public" : "Ask the owner to set it to public" } to get a shareable link. People with access can still view and edit this board.
                         </p>
                     )}
                 </div>

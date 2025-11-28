@@ -1,4 +1,4 @@
-export interface BoardMenuProps {
+export interface MenuProps {
     open: boolean
     onOpenChange: (open: boolean) => void
 }

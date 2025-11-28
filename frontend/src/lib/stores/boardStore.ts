@@ -18,13 +18,6 @@ export const BoardStore = create<BoardState>()(
             selectedBoard: null,
 
             selectBoard: async (id) => {
-                const cached = queryClient.getQueryData<Board>(["board", id])
-
-                if (cached) {
-                    set({ selectedBoard: cached })
-                    return
-                }
-
                 const res = await fetchBoardById(id)
                 queryClient.setQueryData(["board", id], res)
                 set({ selectedBoard: res })

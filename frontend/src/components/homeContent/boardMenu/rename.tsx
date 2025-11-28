@@ -3,14 +3,14 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useUpdateMutation } from "@/lib/hooks/useBoard"
-import type { BoardMenuProps } from "@/lib/objects/dialog"
+import type { MenuProps } from "@/lib/objects/dialog"
 import { renameSchema, type RenameFormValues } from "@/lib/schemas/board"
 import { BoardStore } from "@/lib/stores/boardStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { useForm } from "react-hook-form"
 
-export default function RenameDialog({ open, onOpenChange }: BoardMenuProps) {
+export default function RenameDialog({ open, onOpenChange }: MenuProps) {
     const updateMutation = useUpdateMutation()
     const selectedBoard = BoardStore(state => state.selectedBoard)
 
