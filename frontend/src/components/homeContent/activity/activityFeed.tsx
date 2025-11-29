@@ -5,7 +5,6 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import { Button } from "../../ui/button"
 import { Spinner } from "../../ui/spinner"
 import { ScrollArea } from "../../ui/scroll-area"
-import { Input } from "../../ui/input"
 import UserFilter from "./userFilter"
 
 export default function ActivityFeed() {
@@ -29,11 +28,13 @@ export default function ActivityFeed() {
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger>Open</SheetTrigger>
+            <SheetTrigger asChild>
+                <Button variant={"outline"} size={"icon"} className="w-16">History</Button>
+            </SheetTrigger>
 
             <SheetContent>
                 <SheetHeader>
-                    <SheetTitle>Activity Feed</SheetTitle>
+                    <SheetTitle>Audit Log</SheetTitle>
                     <SheetDescription></SheetDescription>
 
                     {/* <div className="flex gap-1.5">

@@ -248,7 +248,10 @@ export default function BoardView() {
     <>
       <div className="flex justify-center items-center h-12 font-bold text-lg sm:text-xl md:text-2xl px-2 text-center relative">
         {selectedBoard?.title}
-        <div className="absolute right-2"><BoardMenu /></div>
+        <div className="absolute right-2 flex gap-2">
+          <BoardMenu />
+          <ActivityFeed />
+        </div>
       </div>
 
       <ScrollArea className="h-[calc(100vh-6rem)]">
@@ -279,7 +282,6 @@ export default function BoardView() {
                 </SortableList>
               ))}
               <CreateList />
-              <ActivityFeed/>
             </div>
           </SortableContext>
 

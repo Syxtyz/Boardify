@@ -9,14 +9,18 @@ import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import { PlusIcon } from "lucide-react"
 import { Separator } from "../ui/separator"
 
-export default function SideNavigation() {
+interface navigationProps {
+    homeClicked?: boolean
+}
+
+export default function SideNavigation({ homeClicked = false }: navigationProps) {
     const [open, setOpen] = useState(false)
     const [view, setView] = useState<"main" | "create">("main")
 
     return (
         <>
-            <Button onClick={() => { setView("main"), setOpen(true) }} variant={"outline"} size={"icon"}>
-                <MenuIcon />
+            <Button onClick={() => { setView("main"), setOpen(true) }} variant={"outline"} size={homeClicked ? "default" : "icon"}>
+                {homeClicked ? "Click to get started" : <MenuIcon />}
             </Button>
 
             <Sheet
@@ -33,7 +37,7 @@ export default function SideNavigation() {
                                 <MenuOpenIcon />
                             </Button>
                             <SheetTitle>Your Boards</SheetTitle>
-                        <SheetDescription/>
+                            <SheetDescription />
                         </div>
                     </SheetHeader>
 
