@@ -542,7 +542,7 @@ class ReorderCardsView(generics.GenericAPIView):
                 moved_cards.append((card, old_list))
 
         for card, old_list in moved_cards:
-            details = f" has moved the card '{card.title}' from '{old_list.title}' to '{card.list.title}.'"
+            details = f"has moved the card '{card.title}' from '{old_list.title}' to '{card.list.title}'"
             ActivityLog.objects.create(
                 user=request.user,
                 action='card_moved',

@@ -19,7 +19,7 @@ import CreateCard from "./createCard"
 import CreateList from "./createList"
 import CardList from "./modal/cardList"
 import CardForm from "./modal/cardForm"
-import ActivityFeed from "./activityFeed"
+import ActivityFeed from "./activity/activityFeed"
 
 export default function BoardView() {
   const selectedBoard = BoardStore((s) => s.selectedBoard)

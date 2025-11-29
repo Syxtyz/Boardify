@@ -64,16 +64,6 @@ export const CardStore = create<CardProps>((set, get) => ({
         }
     },
 
-    // deleteCard: async (boardId, listId, cardId) => {
-    //     set({ error: null, loading: true })
-    //     try {
-    //         await api.delete(`/boards/${boardId}/lists/${listId}/cards/${cardId}/`)
-    //         set({ cards: get().cards.filter(card => card.id !== cardId), loading: false })
-    //     } catch (e: any) {
-    //         set({ error: e.message, loading: false })
-    //     }
-    // },
-
     clearSelectedCard: () => set({ selectedCard: null }),
 
     setCreatingCard: (value) => set({ creatingCard: value })

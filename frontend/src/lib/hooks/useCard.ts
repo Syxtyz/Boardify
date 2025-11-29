@@ -5,12 +5,14 @@ import { toast } from "sonner";
 import { BoardStore } from "../stores/boardStore";
 import { ListStore } from "../stores/listStore";
 import type { Card, List } from "../objects/data";
+import { getActivityLogs } from "../api/logsAPI";
+import { ActivityStore } from "../stores/activityStore";
 
 export const useCardDeleteMutation = () => {
   return useMutation({
     mutationFn: ({ boardId, listId, cardId }: { boardId: number, listId: number, cardId: number }) => deleteCard(boardId, listId, cardId),
-    onSuccess: (_, variables) => {
-      const { listId, cardId } = variables
+    onSuccess: async (_, variables) => {
+      const { boardId, listId, cardId } = variables
 
       ListStore.setState((state) => {
         if (!state.selectedList) return {}
@@ -38,6 +40,10 @@ export const useCardDeleteMutation = () => {
           }
         }
       })
+
+      const logs = await getActivityLogs(boardId)
+      ActivityStore.setState({ logs })
+      queryClient.invalidateQueries({ queryKey: ["boards"]})
     }
   })
 }
