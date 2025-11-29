@@ -19,6 +19,7 @@ import CreateCard from "./createCard"
 import CreateList from "./createList"
 import CardList from "./modal/cardList"
 import CardForm from "./modal/cardForm"
+import ActivityFeed from "./activityFeed"
 
 export default function BoardView() {
   const selectedBoard = BoardStore((s) => s.selectedBoard)
@@ -278,6 +279,7 @@ export default function BoardView() {
                 </SortableList>
               ))}
               <CreateList />
+              <ActivityFeed/>
             </div>
           </SortableContext>
 

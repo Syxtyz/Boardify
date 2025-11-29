@@ -11,7 +11,7 @@ interface ListProps {
     clearSelectedList: () => void;
 }
 
-export const ListStore = create<ListProps>((set, get) => ({
+export const ListStore = create<ListProps>((set) => ({
     lists: [],
     loading: false,
     selectedList: null,

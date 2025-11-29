@@ -45,3 +45,32 @@ class Card(models.Model):
 
     def __str__(self):
         return f"{self.title} [{self.card_type}] (List: {self.list.title})"
+    
+class ActivityLog(models.Model):
+    ACTION_CHOICES = [
+        ('board_created', 'Board Created'),
+        ('board_updated', 'Board Updated'),
+        ('board_shared', 'Board Shared'),
+        ('board_unshared', 'Board Unshared'),
+        ('list_created', 'List Created'),
+        ('list_updated', 'List Updated'),
+        ('list_deleted', 'List Deleted'),
+        ('card_created', 'Card Created'),
+        ('card_updated', 'Card Updated'),
+        ('card_deleted', 'Card Deleted'),
+        ('card_moved', 'Card Moved'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+    board = models.ForeignKey('Board', on_delete=models.CASCADE, null=True, blank=True)
+    list = models.ForeignKey('List', on_delete=models.SET_NULL, null=True, blank=True)
+    card = models.ForeignKey('Card', on_delete=models.SET_NULL, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    details = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f"{self.user} {self.get_action_display()} at {self.timestamp}"

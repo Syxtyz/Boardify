@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Board, Card, List
+from .models import Board, Card, List, ActivityLog
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -57,3 +57,13 @@ class BoardShareSerializer(serializers.Serializer):
 
 class BoardUnshareSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
+
+class ActivityLogSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    board = BoardSerializer(read_only=True)
+    list = ListSerializer(read_only=True)
+    card = CardSerializer(read_only=True)
+
+    class Meta:
+        model = ActivityLog
+        fields = ['id', 'user', 'action', 'board', 'list', 'card', 'timestamp', 'details']

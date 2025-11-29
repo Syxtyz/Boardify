@@ -40,6 +40,7 @@ export default function CreateList() {
   })
 
   const onSubmit = (data: FormValues) => {
+    console.log(selectedBoard.id)
     handleCreateList(data)
   }
 

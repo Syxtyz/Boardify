@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { BoardStore } from "@/lib/stores/boardStore";
 import { CardStore } from "@/lib/stores/cardStore";
 import CardCheckboxList from "../chkBox";
+import { useCardDeleteMutation } from "@/lib/hooks/useCard";
 
 interface CardDetailsProps {
     onEdit: () => void;
@@ -10,6 +11,7 @@ interface CardDetailsProps {
 export default function CardDetails({ onEdit }: CardDetailsProps) {
     const { selectedCard, updateCard } = CardStore();
     const { selectedBoard } = BoardStore();
+    const deleteMutation = useCardDeleteMutation()
     if (!selectedCard) return null;
 
     if (!selectedBoard) return
@@ -34,7 +36,8 @@ export default function CardDetails({ onEdit }: CardDetailsProps) {
                 <CardCheckboxList items={selectedCard.checkbox_items} onToggle={toggleCheckbox} />
             )}
 
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end mt-4 gap-2">
+                <Button size={"sm"} variant={"outline"} onClick={() => deleteMutation.mutate({ boardId: selectedBoard.id, listId: selectedCard.list_id, cardId: selectedCard.id})}>Delete</Button>
                 <Button size="sm" variant="outline" onClick={onEdit}>
                     Edit
                 </Button>

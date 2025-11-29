@@ -50,9 +50,8 @@ export const useListDeleteMutation = () => {
   return useMutation({
     mutationFn: ({ boardId, listId }: { boardId: number, listId: number}) => deleteList(boardId, listId),
     onSuccess: (_, variables) => {
-      const { listId } = variables // get listId from variables
+      const { listId } = variables
 
-      // Update the local BoardStore
       BoardStore.setState((state) => {
         if (!state.selectedBoard) return {}
         return {

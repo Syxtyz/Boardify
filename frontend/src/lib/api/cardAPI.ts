@@ -5,3 +5,8 @@ export const reorderCards = async (cards: { id: number, list:number, order:numbe
     const { data } = await api.post(ReOrderCardURL, { cards })
     return data
 }
+
+export const deleteCard = async (boardId: number, listId: number, cardId: number) => {
+    const { data } = await api.delete(`boards/${boardId}/lists/${listId}/cards/${cardId}/`)
+    return data
+}

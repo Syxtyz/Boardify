@@ -11,7 +11,6 @@ interface CardProps {
     fetchCardById: (boardId: number, listId: number, cardId: number) => Promise<void>
     createCard: (boardId: number, listId: number, title: string, card_type: "paragraph" | "checkbox", description?: string, checkbox_items?: { text: string, checked: boolean }[]) => Promise<void>
     updateCard: (boardId: number, listId: number, cardId: number, data: Partial<Card>) => Promise<void>
-    deleteCard: (boardId: number, listId: number, cardId: number) => Promise<void>
     clearSelectedCard: () => void
     creatingCard: boolean;
     setCreatingCard: (value: boolean) => void
@@ -65,15 +64,15 @@ export const CardStore = create<CardProps>((set, get) => ({
         }
     },
 
-    deleteCard: async (boardId, listId, cardId) => {
-        set({ error: null, loading: true })
-        try {
-            await api.delete(`/boards/${boardId}/lists/${listId}/cards/${cardId}/`)
-            set({ cards: get().cards.filter(card => card.id !== cardId), loading: false })
-        } catch (e: any) {
-            set({ error: e.message, loading: false })
-        }
-    },
+    // deleteCard: async (boardId, listId, cardId) => {
+    //     set({ error: null, loading: true })
+    //     try {
+    //         await api.delete(`/boards/${boardId}/lists/${listId}/cards/${cardId}/`)
+    //         set({ cards: get().cards.filter(card => card.id !== cardId), loading: false })
+    //     } catch (e: any) {
+    //         set({ error: e.message, loading: false })
+    //     }
+    // },
 
     clearSelectedCard: () => set({ selectedCard: null }),
 

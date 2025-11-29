@@ -41,3 +41,11 @@ export interface Card {
     created_at: string
     order: number
 }
+
+export interface ActivityLog {
+    id: number
+    user?: User
+    action: string
+    details: string
+    timestamp: string
+}
