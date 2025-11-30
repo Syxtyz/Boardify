@@ -19,7 +19,6 @@ import CreateCard from "./createCard"
 import CreateList from "./createList"
 import CardList from "./modal/cardList"
 import CardForm from "./modal/cardForm"
-import ActivityFeed from "./activity/activityFeed"
 
 export default function BoardView() {
   const selectedBoard = BoardStore((s) => s.selectedBoard)
@@ -212,7 +211,6 @@ export default function BoardView() {
 
           <div
             onClick={(e) => e.stopPropagation()}
-            className="ml-2"
           >
             <ListMenu list={list} />
           </div>
@@ -250,7 +248,6 @@ export default function BoardView() {
         {selectedBoard?.title}
         <div className="absolute right-2 flex gap-2">
           <BoardMenu />
-          <ActivityFeed />
         </div>
       </div>
 
@@ -267,7 +264,7 @@ export default function BoardView() {
           }}
         >
           <SortableContext items={lists.map((l) => l.id)} strategy={horizontalListSortingStrategy}>
-            <div className="flex flex-row items-start mx-2 gap-3 justify-start mt-1">
+            <div className="flex flex-row items-start mx-6 gap-6 justify-start mt-1">
               {lists.map(list => (
                 <SortableList key={list.id} list={list}>
                   <ScrollArea className="max-h-[73vh] overflow-y-auto flex flex-col">

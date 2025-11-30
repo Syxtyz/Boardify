@@ -1,12 +1,12 @@
 import { useState } from "react"
-import { MoreHorizontalIcon, SearchIcon, Share2Icon, Edit2Icon, Trash2Icon } from "lucide-react"
+import { MoreHorizontalIcon, Share2Icon, Edit2Icon, Trash2Icon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
-import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import RenameDialog from "./rename"
 import DeleteDialog from "./delete"
 import ShareDialog from "./share"
+import ActivityFeed from "../activity/activityFeed"
 
 export default function BoardMenu() {
     const [showRenameDialog, setShowRenameDialog] = useState(false)
@@ -16,10 +16,11 @@ export default function BoardMenu() {
     return (
         <ButtonGroup>
             <ButtonGroup>
-                <Input placeholder="Search..." />
+                {/* <Input placeholder="Search..." />
                 <Button variant="outline">
                     <SearchIcon />
-                </Button>
+                </Button> */}
+                <ActivityFeed />
             </ButtonGroup>
 
             <ButtonGroup>
@@ -50,11 +51,11 @@ export default function BoardMenu() {
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <RenameDialog open={showRenameDialog} onOpenChange={setShowRenameDialog}/>
+                <RenameDialog open={showRenameDialog} onOpenChange={setShowRenameDialog} />
 
-                <ShareDialog open={showShareDialog} onOpenChange={setShowShareDialog}/>
-                
-                <DeleteDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}/>
+                <ShareDialog open={showShareDialog} onOpenChange={setShowShareDialog} />
+
+                <DeleteDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog} />
             </ButtonGroup>
         </ButtonGroup>
     )

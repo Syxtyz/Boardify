@@ -95,7 +95,7 @@ export const useCreateBoardMutation = () => {
             if (!newBoard.id) throw new Error("Board created unsuccessfully")
 
             for (let i = 0; i < lists.length; i++) {
-                await createList(newBoard.id, lists[i])
+                await createList(newBoard.id, lists[i], i)
             }
 
             // await Promise.all(lists.map((list) => createList(newBoard.id, list)))

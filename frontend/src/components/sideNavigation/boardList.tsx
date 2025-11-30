@@ -24,16 +24,23 @@ export default function BoardList() {
     <ScrollArea className="h-11/12 my-4 pr-6">
       <div className="flex flex-col ">
         <p className="mb-2">Owned Boards</p>
-        {ownedBoards.map((board: any) => (
-          <Button
-            variant="ghost"
-            key={board.id}
-            onClick={() => selectBoard(board.id)}
-            className="h-9 rounded-lg cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 justify-start"
-          >
-            <Columns2Icon /> {board.title}
-          </Button>
-        ))}
+        {ownedBoards.length === 0 ? (
+          <p className="text-center text-muted-foreground text-sm">( Empty )</p>
+        ) : (
+          <>
+            {ownedBoards.map((board: any) => (
+              <Button
+                variant="ghost"
+                key={board.id}
+                onClick={() => selectBoard(board.id)}
+                className="h-9 rounded-lg cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 justify-start"
+              >
+                <Columns2Icon /> {board.title}
+              </Button>
+            ))}
+          </>
+        )}
+
       </div>
 
       <div className="mt-2 flex flex-col">

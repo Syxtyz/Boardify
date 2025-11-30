@@ -6,6 +6,7 @@ import { Button } from "../../ui/button"
 import { Spinner } from "../../ui/spinner"
 import { ScrollArea } from "../../ui/scroll-area"
 import UserFilter from "./userFilter"
+import { HistoryIcon } from "lucide-react"
 
 export default function ActivityFeed() {
     const selectedBoard = BoardStore((s) => s.selectedBoard)
@@ -29,7 +30,7 @@ export default function ActivityFeed() {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant={"outline"} size={"icon"} className="w-16">History</Button>
+                <Button variant={"outline"} size={"default"}><HistoryIcon/></Button>
             </SheetTrigger>
 
             <SheetContent>

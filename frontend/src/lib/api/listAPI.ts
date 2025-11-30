@@ -1,8 +1,8 @@
 import { api } from "../contexts/authContext";
 import { ReOrderListURL } from "../helper/urls";
 
-export const createList = async (boardId: number, title: string) => {
-    const { data } = await api.post(`boards/${boardId}/lists/`, { title })
+export const createList = async (boardId: number, title: string, order?: number) => {
+    const { data } = await api.post(`boards/${boardId}/lists/`, { title, order })
     return data
 }
 

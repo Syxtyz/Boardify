@@ -10,6 +10,8 @@ import ClearIcon from "@mui/icons-material/Clear"
 import AddIcon from "@mui/icons-material/Add"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createList } from "@/lib/api/listAPI"
+import type { List } from "@/lib/objects/data"
+import { useState } from "react"
 
 const schema = z.object({
   title: z.string().min(1, "List Title is required"),
@@ -20,6 +22,7 @@ type FormValues = z.infer<typeof schema>
 export default function CreateList() {
   const { selectedBoard } = BoardStore()
   const queryClient = useQueryClient()
+  const [open, setOpen] = useState(false)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -29,21 +32,33 @@ export default function CreateList() {
   const { mutate: handleCreateList, isPending } = useMutation({
     mutationFn: async (data: FormValues) => {
       if (!selectedBoard?.id) throw new Error("No board selected")
-      await createList(selectedBoard.id, data.title)
+      const order = selectedBoard.lists.map((list: List) => list.order)
+      return await createList(selectedBoard.id, data.title, order.length)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["board", selectedBoard?.id] })
+
+    onSuccess: (newList) => {
+      BoardStore.setState((state) => {
+        if (!state.selectedBoard) return {}
+
+        const updated = { ...state.selectedBoard }
+        updated.lists = [...updated.lists, newList]
+
+        return { selectedBoard: updated }
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["board", selectedBoard?.id]
+      })
       form.reset()
-    },
+      setOpen(false)
+    }
   })
 
   const onSubmit = (data: FormValues) => {
-    console.log(selectedBoard.id)
     handleCreateList(data)
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <div className="w-full sm:w-64 pointer-events-none">
           <button className="py-2 px-2 w-full sm:w-12 bg-zinc-200 dark:bg-zinc-800 group cursor-pointer flex items-center overflow-hidden rounded hover:w-full sm:hover:w-64 transition-[width] pointer-events-auto">

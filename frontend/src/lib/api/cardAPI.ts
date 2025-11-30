@@ -12,7 +12,7 @@ export const deleteCard = async (boardId: number, listId: number, cardId: number
     return data
 }
 
-export const createCard = async (boardId: number, listId: number, title: string, card_type: "paragraph" | "checkbox", description: string = "", checkbox_items: string[] = []) => {
+export const createCard = async (boardId: number, listId: number, title: string, card_type: "paragraph" | "checkbox", description: string = "", checkbox_items: { text: string; checked: boolean }[] = []) => {
     const { data } = await api.post(`boards/${boardId}/lists/${listId}/cards/`, { title, card_type, description, checkbox_items })
     return data
 }

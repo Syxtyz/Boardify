@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { XIcon } from "lucide-react";
 import { toast } from "sonner";
 import { CardStore } from "@/lib/stores/cardStore";
@@ -12,36 +11,36 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCardCreateMutation, useCardUpdateMutation } from "@/lib/hooks/useCard";
 
 interface CardFormProps {
-    selectedList: List | null;
-    isEditing?: boolean;
-    onCancel: () => void;
+    selectedList: List | null
+    isEditing?: boolean
+    onCancel: () => void
 }
 
 export default function CardForm({ selectedList, isEditing = false, onCancel }: CardFormProps) {
-    const { selectedCard } = CardStore();
+    const { selectedCard } = CardStore()
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [cardType, setCardType] = useState<"paragraph" | "checkbox" | undefined>(undefined);
-    const [checkboxItems, setCheckboxItems] = useState<CheckBoxItem[]>([]);
+    const [title, setTitle] = useState("")
+    const [description, setDescription] = useState("")
+    const [cardType, setCardType] = useState<"paragraph" | "checkbox" | undefined>(undefined)
+    const [checkboxItems, setCheckboxItems] = useState<CheckBoxItem[]>([])
 
-    const createCardMutation = useCardCreateMutation();
-    const updateCardMutation = useCardUpdateMutation();
+    const createCardMutation = useCardCreateMutation()
+    const updateCardMutation = useCardUpdateMutation()
 
-    if (!selectedList) return null;
+    if (!selectedList) return null
 
     useEffect(() => {
         if (isEditing && selectedCard) {
-            setTitle(selectedCard.title);
-            setDescription(selectedCard.description || "");
-            setCardType(selectedCard.card_type);
-            setCheckboxItems(selectedCard.checkbox_items || []);
+            setTitle(selectedCard.title)
+            setDescription(selectedCard.description || "")
+            setCardType(selectedCard.card_type)
+            setCheckboxItems(selectedCard.checkbox_items || [])
         }
     }, [isEditing, selectedCard]);
 
     const handleSave = () => {
-        if (!title.trim()) return toast.warning("Please enter a title.");
-        if (!cardType) return toast.warning("Please select a card type.");
+        if (!title.trim()) return toast.warning("Please enter a title.")
+        if (!cardType) return toast.warning("Please select a card type.")
 
         const newData = {
             title,
@@ -64,7 +63,7 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                 title,
                 card_type: cardType,
                 description: description || "",
-                checkbox_items: checkboxItems.map((i) => i.text)
+                checkbox_items: checkboxItems.map((i) => ({ text: i.text, checked: i.checked }))
             });
         }
     };
@@ -105,14 +104,14 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                     <div className="space-y-2">
                         {checkboxItems.map((item, i) => (
                             <div key={i} className="flex items-center gap-2">
-                                <Checkbox
+                                {/* <Checkbox
                                     checked={item.checked}
                                     onCheckedChange={() => {
                                         const updated = [...checkboxItems];
                                         updated[i].checked = !updated[i].checked;
                                         setCheckboxItems(updated);
                                     }}
-                                />
+                                /> */}
                                 <Input
                                     value={item.text}
                                     onChange={(e) => {

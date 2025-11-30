@@ -9,7 +9,7 @@ interface CardCheckboxListProps {
 
 export default function CardCheckboxList({ items, onToggle, readOnly = false }: CardCheckboxListProps) {
     return (
-        <div className="flex flex-col gap-2 mt-1">
+        <div className="flex flex-col gap-2 mt-1 h-4 overflow-hidden">
             {items.map((item, i) => (
                 <div key={i} className="flex items-center gap-2">
                     <Checkbox

@@ -11,7 +11,7 @@ import { CardStore } from "../stores/cardStore";
 
 export const useCardCreateMutation = () => {
   return useMutation({
-    mutationFn: ({ boardId, listId, title, card_type, description, checkbox_items }: { boardId: number, listId: number, title: string, card_type: "paragraph" | "checkbox", description?: string, checkbox_items?: string[]}) => createCard(boardId, listId, title, card_type, description, checkbox_items),
+    mutationFn: ({ boardId, listId, title, card_type, description, checkbox_items }: { boardId: number, listId: number, title: string, card_type: "paragraph" | "checkbox", description?: string, checkbox_items: { text: string; checked: boolean }[]}) => createCard(boardId, listId, title, card_type, description, checkbox_items),
     onSuccess: (newCard, { listId }) => {
       ListStore.setState((state) => {
         if (!state.selectedList) return {}
@@ -95,6 +95,8 @@ export const useCardDeleteMutation = () => {
           }
         }
       })
+
+      CardStore.setState({ selectedCard: null })
 
       const logs = await getActivityLogs(boardId)
       ActivityStore.setState({ logs })

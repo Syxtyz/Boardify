@@ -14,7 +14,7 @@ interface CardProps {
     setCreatingCard: (value: boolean) => void
 }
 
-export const CardStore = create<CardProps>((set, get) => ({
+export const CardStore = create<CardProps>((set) => ({
     cards: [],
     loading: false,
     selectedCard: null,
