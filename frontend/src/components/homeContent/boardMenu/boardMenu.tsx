@@ -1,12 +1,13 @@
 import { useState } from "react"
-import { MoreHorizontalIcon, Share2Icon, Edit2Icon, Trash2Icon } from "lucide-react"
+import { MoreHorizontalIcon, Share2Icon, Edit2Icon, Trash2Icon, SearchIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import RenameDialog from "./rename"
 import DeleteDialog from "./delete"
 import ShareDialog from "./share"
-import ActivityFeed from "../activity/activityFeed"
+// import ActivityFeed from "../activity/activityFeed"
+import { Input } from "@/components/ui/input"
 
 export default function BoardMenu() {
     const [showRenameDialog, setShowRenameDialog] = useState(false)
@@ -16,11 +17,12 @@ export default function BoardMenu() {
     return (
         <ButtonGroup>
             <ButtonGroup>
-                {/* <Input placeholder="Search..." />
+                 <Input placeholder="Search..." />
+
                 <Button variant="outline">
                     <SearchIcon />
-                </Button> */}
-                <ActivityFeed />
+                </Button> 
+                {/* <ActivityFeed /> */}
             </ButtonGroup>
 
             <ButtonGroup>
