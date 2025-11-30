@@ -15,7 +15,6 @@ import { ListMenu } from "./listMenu"
 import { CSS } from "@dnd-kit/utilities"
 import CardDetails from "./modal/cardDetails"
 import BoardMenu from "./boardMenu/boardMenu"
-import CardCheckboxList from "./modal/chkBox"
 import CreateCard from "./modal/createCard"
 import CreateList from "./createList"
 import CardList from "./modal/cardList"
@@ -309,9 +308,6 @@ export default function BoardView() {
                   <div className="w-56 p-2 bg-zinc-200 dark:bg-zinc-800 rounded shadow-lg cursor-grabbing flex flex-col">
                     <p className="font-medium break-all w-52 truncate">{card.title}</p>
                     <p className="text-sm text-gray-500 w-52 truncate whitespace-pre-wrap">{card.description}</p>
-                    {card.card_type === "checkbox" && card.checkbox_items?.length && (
-                      <CardCheckboxList items={card.checkbox_items} readOnly />
-                    )}
                   </div>
                 )
               })()
