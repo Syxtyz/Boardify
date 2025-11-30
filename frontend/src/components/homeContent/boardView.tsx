@@ -1,7 +1,7 @@
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core"
 import type { List, Card } from "@/lib/objects/data"
-import { SortableContext, useSortable, arrayMove, horizontalListSortingStrategy, verticalListSortingStrategy, sortableKeyboardCoordinates, } from "@dnd-kit/sortable"
-import { DndContext, PointerSensor, KeyboardSensor, useSensors, useSensor, closestCenter, DragOverlay, useDroppable } from "@dnd-kit/core"
+import { SortableContext, useSortable, arrayMove, horizontalListSortingStrategy, verticalListSortingStrategy, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
+import { DndContext, PointerSensor, KeyboardSensor, useSensors, useSensor, closestCenter, closestCorners, DragOverlay, useDroppable } from "@dnd-kit/core"
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import { useState, useEffect, useCallback, memo } from "react"
 import { useReorderListMutation } from "@/lib/hooks/useList"
@@ -124,13 +124,25 @@ export default function BoardView() {
     [lists, reorderCardsMutation]
   )
 
+  // ✅ CUSTOM COLLISION DETECTION FOR LISTS AND CARDS
   const customCollisionDetection = useCallback(
     ({ active, droppableContainers, ...args }: any) => {
-      const isList = lists.some(l => l.id === Number(active.id))
-      const filtered = droppableContainers.filter((container: any) =>
-        isList ? lists.some(l => l.id === Number(container.id)) : !lists.some(l => l.id === Number(container.id))
-      )
-      return closestCenter({ ...args, active, droppableContainers: filtered })
+      const activeId = Number(active.id)
+      const isList = lists.some(l => l.id === activeId)
+
+      if (isList) {
+        // LIST COLLISION: only consider other lists
+        const listContainers = droppableContainers.filter((c: any) =>
+          lists.some(l => l.id === Number(c.id))
+        )
+        return closestCenter({ ...args, active, droppableContainers: listContainers })
+      } else {
+        // CARD COLLISION: only consider card containers (not lists)
+        const cardContainers = droppableContainers.filter((c: any) =>
+          !lists.some(l => l.id === Number(c.id))
+        )
+        return closestCorners({ ...args, active, droppableContainers: cardContainers })
+      }
     },
     [lists]
   )
@@ -171,12 +183,10 @@ export default function BoardView() {
 
   const DroppableList = ({ list, children }: { list: List; children: React.ReactNode }) => {
     const { setNodeRef, isOver } = useDroppable({ id: `list-${list.id}` })
-
     return (
       <div
         ref={setNodeRef}
-        className={`w-64 flex flex-col p-2 rounded bg-gray-100 dark:bg-zinc-900 ${isOver ? "bg-gray-300 dark:bg-zinc-700" : ""
-          }`}
+        className={`w-64 flex flex-col p-2 rounded bg-gray-100 dark:bg-zinc-900 ${isOver ? "bg-gray-300 dark:bg-zinc-700" : ""}`}
       >
         {children}
       </div>
@@ -210,9 +220,7 @@ export default function BoardView() {
             <p className="pr-8 truncate">{list.title}</p>
           </div>
 
-          <div
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div onClick={(e) => e.stopPropagation()}>
             <ListMenu list={list} />
           </div>
         </div>
