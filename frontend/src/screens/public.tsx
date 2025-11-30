@@ -4,7 +4,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ThemeButton from "@/components/themeButton";
 import type { List, Card } from "@/lib/objects/data";
-import CardCheckboxList from "@/components/homeContent/chkBox";
+import CardCheckboxList from "@/components/homeContent/modal/chkBox";
 import { usePublicBoard } from "@/lib/hooks/useBoard";
 
 export default function PublicBoardScreen() {

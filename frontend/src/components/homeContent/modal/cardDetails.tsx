@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { BoardStore } from "@/lib/stores/boardStore";
 import { CardStore } from "@/lib/stores/cardStore";
-import CardCheckboxList from "../chkBox";
+import CardCheckboxList from "./chkBox";
 import { useCardDeleteMutation, useCardUpdateMutation } from "@/lib/hooks/useCard";
 
 interface CardDetailsProps {

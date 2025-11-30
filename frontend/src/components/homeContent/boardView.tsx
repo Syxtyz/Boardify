@@ -2,6 +2,7 @@ import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core"
 import type { List, Card } from "@/lib/objects/data"
 import { SortableContext, useSortable, arrayMove, horizontalListSortingStrategy, verticalListSortingStrategy, sortableKeyboardCoordinates, } from "@dnd-kit/sortable"
 import { DndContext, PointerSensor, KeyboardSensor, useSensors, useSensor, closestCenter, DragOverlay, useDroppable } from "@dnd-kit/core"
+import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import { useState, useEffect, useCallback, memo } from "react"
 import { useReorderListMutation } from "@/lib/hooks/useList"
 import { useReorderCardMutation } from "@/lib/hooks/useCard"
@@ -14,8 +15,8 @@ import { ListMenu } from "./listMenu"
 import { CSS } from "@dnd-kit/utilities"
 import CardDetails from "./modal/cardDetails"
 import BoardMenu from "./boardMenu/boardMenu"
-import CardCheckboxList from "./chkBox"
-import CreateCard from "./createCard"
+import CardCheckboxList from "./modal/chkBox"
+import CreateCard from "./modal/createCard"
 import CreateList from "./createList"
 import CardList from "./modal/cardList"
 import CardForm from "./modal/cardForm"
@@ -223,12 +224,15 @@ export default function BoardView() {
 
   const CardItem = memo(({ card, listId }: { card: Card; listId: number }) => {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({ id: card.id })
+    const finished = card.checkbox_items.filter(item => item.checked).length
+    const total = card.checkbox_items.length
+
     return (
       <div
         ref={setNodeRef}
         {...attributes}
         {...listeners}
-        className="flex flex-col bg-zinc-200 dark:bg-zinc-800 rounded cursor-pointer border hover:border-zinc-800 dark:hover:border-zinc-300 my-1 mx-1 p-2 text-sm sm:text-base"
+        className="flex flex-col bg-zinc-200 dark:bg-zinc-800 rounded cursor-pointer border hover:border-zinc-800 dark:hover:border-zinc-300 mb-2 mx-1 p-2 text-sm sm:text-base"
         style={{ transform: CSS.Transform.toString(transform), opacity: isDragging ? 0.5 : 1 }}
         onClick={(e) => {
           e.stopPropagation()
@@ -237,7 +241,12 @@ export default function BoardView() {
       >
         <p className="font-medium break-all w-52 truncate">{card.title}</p>
         <p className="text-sm text-gray-500 w-52 truncate whitespace-pre-wrap">{card.description}</p>
-        {card.card_type === "checkbox" && card.checkbox_items?.length && <CardCheckboxList items={card.checkbox_items} readOnly />}
+        {card.card_type === "checkbox" && card.checkbox_items?.length &&
+          <div className="items-center flex">
+            <CheckBoxOutlinedIcon fontSize="small" />
+            {finished} / {total}
+          </div>
+        }
       </div>
     )
   }, (prev, next) => prev.card === next.card)

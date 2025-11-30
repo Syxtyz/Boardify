@@ -1,6 +1,6 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import CreateCard from "../createCard";
+import CreateCard from "./createCard";
 import { CardStore } from "@/lib/stores/cardStore";
 import type { List } from "@/lib/objects/data";
 
