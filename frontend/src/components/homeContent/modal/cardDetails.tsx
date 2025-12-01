@@ -37,12 +37,14 @@ export default function CardDetails({ onEdit }: CardDetailsProps) {
                     {selectedCard.description}
                 </p>
             ) : (
-                <CardCheckboxList items={selectedCard.checkbox_items} onToggle={toggleCheckbox} />
+            
+                    <CardCheckboxList items={selectedCard.checkbox_items} onToggle={toggleCheckbox} />
+
             )}
 
-            <div className="flex justify-end mt-4 gap-2">
-                <Button size={"sm"} variant={"outline"} onClick={() => deleteMutation.mutate({ boardId: selectedBoard.id, listId: selectedCard.list_id, cardId: selectedCard.id })}>Delete</Button>
-                <Button size="sm" variant="outline" onClick={onEdit}>
+            <div className="flex w-flull mt-4 gap-2">
+                <Button className="w-full rounded" size={"sm"} variant={"outline"} onClick={() => deleteMutation.mutate({ boardId: selectedBoard.id, listId: selectedCard.list_id, cardId: selectedCard.id })}>Delete</Button>
+                <Button className="w-full rounded" size="sm" variant="outline" onClick={onEdit}>
                     Edit
                 </Button>
             </div>

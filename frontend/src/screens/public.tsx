@@ -21,7 +21,7 @@ export default function PublicBoardScreen() {
 
     return (
         <>
-            <div className="flex justify-center items-center h-12 font-bold text-lg sm:text-xl md:text-2xl px-2 text-center relative">
+            <div className="flex justify-center items-center h-12 font-bold text-lg sm:text-xl md:text-2xl px-4 relative">
                 {board.title}
                 <div className="absolute right-2">
                     <ThemeButton />
@@ -29,7 +29,7 @@ export default function PublicBoardScreen() {
             </div>
 
             <ScrollArea className="h-[calc(100vh-3rem)]">
-                <div className="flex flex-row flex-wrap md:flex-nowrap items-start mx-2 gap-3 md:gap-4 justify-center md:justify-start mt-0.5">
+                <div className="flex flex-col md:flex-row items-start mx-2 gap-3 md:gap-4 justify-center md:justify-start mt-0.5">
                     {board.lists.map((list: any) => (
                         <Dialog
                             key={list.id}
@@ -45,7 +45,7 @@ export default function PublicBoardScreen() {
                         >
                             <DialogTrigger asChild>
                                 <div
-                                    className="w-full sm:w-[18rem] flex flex-col bg-gray-100 dark:bg-zinc-900 font-bold py-2 pl-2 rounded transition-transform hover:scale-[1.01]"
+                                    className="w-full flex flex-col bg-gray-100 dark:bg-zinc-900 font-bold py-2 pl-2 rounded transition-transform hover:scale-[1.01]"
                                     onClick={() => setSelectedList(list)}
                                 >
                                     <div className="relative">
@@ -78,12 +78,15 @@ export default function PublicBoardScreen() {
                             </DialogTrigger>
 
 
-                            <DialogContent className="flex flex-row w-[90vw] sm:max-w-none md:max-w-none lg:max-w-none max-w-none">
-                                <ScrollArea className="w-[50%] sm:w-[35%] h-[75vh] pr-3">
+                            {/* <DialogContent className="flex flex-row w-[90vw] sm:max-w-none md:max-w-none lg:max-w-none max-w-none"> */}
+                            <DialogContent className="flex flex-col gap-2">
+                                
+                                {/* <ScrollArea className="w-[50%] sm:w-[35%] h-[75vh] pr-3"> */}
+                                <ScrollArea className="w-full">
                                     <DialogHeader>
                                         <DialogTitle>{selectedList?.title}</DialogTitle>
                                     </DialogHeader>
-                                    <DialogDescription>
+                                    <DialogDescription className="space-y-2 mt-4">
                                         {selectedList?.cards.length === 0 ? (
                                             <div className="text-center text-gray-500 py-4">No cards available</div>
                                         ) : (
@@ -91,7 +94,7 @@ export default function PublicBoardScreen() {
                                                 <div
                                                     key={card.id}
                                                     onClick={() => setSelectedCard(card)}
-                                                    className={`flex flex-col rounded cursor-pointer border my-1 mx-1 p-2 text-sm sm:text-base ${selectedCard?.id === card.id
+                                                    className={`flex flex-col rounded cursor-pointer border w-full p-2 text-sm sm:text-base ${selectedCard?.id === card.id
                                                         ? "bg-zinc-300 dark:bg-zinc-800 border-zinc-600"
                                                         : "bg-zinc-200 dark:bg-zinc-900 hover:border-zinc-700"
                                                         }`}
@@ -105,14 +108,16 @@ export default function PublicBoardScreen() {
                                     <ScrollBar orientation="vertical" />
                                 </ScrollArea>
 
-                                <div className="border-r border-zinc-300 dark:border-zinc-700" />
+                                {/* <div className="border-r border-zinc-300 dark:border-zinc-700" /> */}
+                                <div className="border-b-2 pb-1 border-zinc-300 dark:border-zinc-700"></div>
 
-                                <div className="w-[50%] pl-3">
+                                {/* <div className="w-[50%] pl-3"> */}
+                                <div className="w-full">
                                     {selectedCard ? (
                                         <>
                                             <DialogHeader>
-                                                <DialogTitle>{selectedCard.title}</DialogTitle>
-                                                <DialogDescription className="text-gray-500 dark:text-gray-400 mt-2">
+                                                <DialogTitle className="text-start mt-1">{selectedCard.title}</DialogTitle>
+                                                <DialogDescription className="text-gray-500 dark:text-gray-400 mt-2 text-start">
                                                     {selectedCard.card_type === "paragraph" ? (
                                                         <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                                                             {selectedCard.description}
@@ -124,7 +129,7 @@ export default function PublicBoardScreen() {
                                             </DialogHeader>
                                         </>
                                     ) : (
-                                        <p className="text-gray-500 mt-4 text-sm">Select a card to view its details.</p>
+                                        <p className="text-gray-500 mt-4 text-sm text-center">Select a card to view its details.</p>
                                     )}
                                 </div>
                             </DialogContent>

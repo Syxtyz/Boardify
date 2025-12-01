@@ -61,7 +61,7 @@ export default function CreateList() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <div className="w-full sm:w-64 pointer-events-none">
-          <button className="py-2 px-2 w-full sm:w-12 bg-zinc-200 dark:bg-zinc-800 group cursor-pointer flex items-center overflow-hidden rounded hover:w-full sm:hover:w-64 transition-[width] pointer-events-auto">
+          <button className="py-2 px-2 w-12 bg-zinc-200 dark:bg-zinc-800 group cursor-pointer flex items-center overflow-hidden rounded hover:w-full sm:hover:w-64 transition-[width] pointer-events-auto">
             <div className="w-8 flex justify-center shrink-0">
               <AddIcon />
             </div>
@@ -95,13 +95,13 @@ export default function CreateList() {
           </div>
           <DialogFooter>
             <DialogClose asChild>
+              <Button type="submit" className="w-16" disabled={isPending}>
+                {isPending ? "Adding..." : "Add"}
+              </Button>
+            </DialogClose>
               <Button variant="outline" className="w-16">
                 Cancel
               </Button>
-            </DialogClose>
-            <Button type="submit" className="w-16" disabled={isPending}>
-              {isPending ? "Adding..." : "Add"}
-            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
