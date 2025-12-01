@@ -6,7 +6,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import RenameDialog from "./rename"
 import DeleteDialog from "./delete"
 import ShareDialog from "./share"
-import ActivityFeed from "../activity/activityFeed"
 
 export default function BoardMenu() {
     const [showRenameDialog, setShowRenameDialog] = useState(false)

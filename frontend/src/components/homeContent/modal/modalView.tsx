@@ -2,7 +2,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import CardList from "./cardList";
 import CardForm from "./cardForm";
 import CardDetails from "./cardDetails";
-import { Separator } from "@/components/ui/separator";
 import { useState, useEffect } from "react";
 import { ListStore } from "@/lib/stores/listStore";
 import { CardStore } from "@/lib/stores/cardStore";
@@ -38,7 +37,7 @@ export default function ModalView({
 
     return (
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-            <DialogContent className="flex flex-col sm:flex-row gap-6 sm:max-w-none w-11/12 sm:w-[90vw] h-[90vh] overflow-auto">
+            <DialogContent className={`flex flex-col sm:flex-row sm:max-w-none overflow-auto ${isMobile ? "h-screen w-screen" : "h-[90vh] w-11/12"}`}>
                 {isMobile ? (
                     viewSize === "small" ? (
                         <CardList
@@ -74,8 +73,8 @@ export default function ModalView({
                         </div>
                     )
                 ) : (
-                    <>
-                        <div className="w-1/3">
+                    <div className="flex flex-row w-full h-fit gap-4">
+                        <div className="w-1/3 h-full">
                             <CardList
                                 selectedList={selectedList}
                                 setCreatingCard={setCreatingCardState}
@@ -83,7 +82,8 @@ export default function ModalView({
                                 onSelect={() => setViewSize("large")}
                             />
                         </div>
-                        <Separator orientation="vertical" className=""/>
+                        <div className="border" />
+
                         <div className="w-full">
                             <div className="flex flex-col gap-2 overflow-auto">
                                 {creatingCardState ? (
@@ -98,7 +98,7 @@ export default function ModalView({
                                         onCancel={() => setIsEditing(false)}
                                     />
                                 ) : (
-                                    <div className="flex flex-col h-full gap-4">
+                                    <div className="flex flex-col h-full gap-4 mb-4">
                                         <CardDetails onEdit={() => setIsEditing(true)} />
                                     </div>
                                 ) : (
@@ -109,7 +109,7 @@ export default function ModalView({
                             </div>
 
                         </div>
-                    </>
+                    </div>
                 )}
             </DialogContent>
         </Dialog>

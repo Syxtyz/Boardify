@@ -284,7 +284,7 @@ export default function BoardView() {
           }}
         >
           <p className="font-medium break-all w-52 truncate">{card.title}</p>
-          <p className="text-sm text-gray-500 w-52 truncate whitespace-pre-wrap">
+          <p className="text-sm text-gray-500 w-52 truncate">
             {card.description}
           </p>
           {card.card_type === "checkbox" && card.checkbox_items?.length && (
@@ -369,7 +369,7 @@ export default function BoardView() {
                     <p className="font-medium break-all w-52 truncate">
                       {card.title}
                     </p>
-                    <p className="text-sm text-gray-500 w-52 truncate whitespace-pre-wrap">
+                    <p className="text-sm text-gray-500 w-52 truncate">
                       {card.description}
                     </p>
                   </div>

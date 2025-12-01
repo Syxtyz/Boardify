@@ -17,7 +17,7 @@ export default function CardList({ selectedList, setCreatingCard, setIsEditing, 
     if (!selectedList) return
 
     return (
-        <div className="flex-1">
+        <div className="flex-1 w-full pt-4">
             <DialogHeader>
                 <DialogTitle>{selectedList.title}</DialogTitle>
                 <DialogDescription>View and manage the cards in this list.</DialogDescription>
@@ -35,12 +35,13 @@ export default function CardList({ selectedList, setCreatingCard, setIsEditing, 
                                     setIsEditing(false);
                                     onSelect?.()
                                 }}
-                                className={`w-full p-3 rounded bg-zinc-100 dark:bg-zinc-800 hover:border-zinc-400 transition cursor-pointer ${selectedCard?.id === card.id ? "border-zinc-400 dark:border-zinc-600" : ""
-                                    }`}
+                                className={`flex flex-col p-3 bg-zinc-100 dark:bg-zinc-800 hover:border-zinc-400 cursor-pointer ${selectedCard?.id === card.id && "border-zinc-400 dark:border-zinc-600"}`}
                             >
-                                <h4 className="font-medium break-all">{card.title}</h4>
-                                {card.description && (
-                                    <p className="text-sm text-muted-foreground truncate">{card.description}</p>
+                                <h4 className="font-medium wrap-break-word">{card.title}</h4>
+                                {card.description ? (
+                                    <p className="text-sm text-muted-foreground w-80 truncate">{card.description}</p>
+                                ) : (
+                                    null
                                 )}
                             </div>
                         ))
@@ -58,11 +59,11 @@ export default function CardList({ selectedList, setCreatingCard, setIsEditing, 
                             onSelect?.()
                         }}
                     />
-                    
+
                 </div>
-                <ScrollBar orientation="vertical"/>
+                <ScrollBar orientation="vertical" />
             </ScrollArea>
-            
+
         </div>
     );
 }

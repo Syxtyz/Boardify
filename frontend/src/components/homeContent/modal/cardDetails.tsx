@@ -31,8 +31,8 @@ export default function CardDetails({ onEdit }: CardDetailsProps) {
     };
 
     return (
-        <div className="flex flex-col gap-4">
-            <div className="h-fit flex flex-col p-4">
+        <div className="flex flex-col pt-4 pr-4 gap-4">
+            <div className="h-fit flex flex-col">
                 <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-lgtext-center self-center">{selectedCard.title}</h3>
                     <div>
@@ -50,7 +50,7 @@ export default function CardDetails({ onEdit }: CardDetailsProps) {
 
             <Separator />
 
-            <div className="border-4 p-4 flex h-40 items-center">
+            <div className="flex h-40 items-center">
                 <p>Comment Box</p>
             </div>
         </div>
