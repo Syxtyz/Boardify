@@ -15,13 +15,13 @@ export default function BoardMenu() {
 
     return (
         <ButtonGroup>
-            <ButtonGroup>
-                {/* <Input placeholder="Search..." />
+            {/* <ButtonGroup>
+                <Input placeholder="Search..." />
                 <Button variant="outline">
                     <SearchIcon />
-                </Button> */}
+                </Button>
                 <ActivityFeed />
-            </ButtonGroup>
+            </ButtonGroup> */}
 
             <ButtonGroup>
                 <DropdownMenu>

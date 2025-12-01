@@ -72,6 +72,8 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
         <div className="space-y-3">
             <h3 className="font-semibold text-lg">{isEditing ? "Edit Card" : "Create New Card"}</h3>
 
+            <div className="flex items-center space-x-2">
+                
             <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
 
             <Select
@@ -79,7 +81,7 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                 onValueChange={(choice) => {
                     const type = choice as "paragraph" | "checkbox";
                     setCardType(type);
-
+                    
                     if (type === "checkbox") {
                         setDescription("");
                         if (checkboxItems.length === 0) {
@@ -89,7 +91,7 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                         setCheckboxItems([]);
                     }
                 }}
-            >
+                >
                 <SelectTrigger>
                     <SelectValue placeholder="Select type" />
                 </SelectTrigger>
@@ -98,8 +100,9 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                     <SelectItem value="checkbox">Checkbox</SelectItem>
                 </SelectContent>
             </Select>
+            </div>
 
-            <ScrollArea className="h-62 pr-4">
+            <ScrollArea className={`${checkboxItems.length > 4 ? " h-48 pr-2": null}`}>
                 {cardType === "checkbox" ? (
                     <div className="space-y-2">
                         {checkboxItems.map((item, i) => (
@@ -134,7 +137,7 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                         ))}
 
                         <Button
-                            variant="ghost"
+                            variant="outline"
                             onClick={() =>
                                 setCheckboxItems([...checkboxItems, { text: "", checked: false }])
                             }
@@ -148,6 +151,7 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                     </div>
                 ) : cardType === "paragraph" ? (
                     <Textarea
+                        className="w-full"
                         placeholder="Description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -156,11 +160,9 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                 ) : null}
             </ScrollArea>
 
-            <div className="flex justify-end gap-2 pt-2">
-                <Button variant="secondary" onClick={onCancel}>
-                    Cancel
-                </Button>
+            <div className="flex flex-col sm:justify-end gap-2 sm:space-y-0 sm:pt-0">
                 <Button
+                    className="rounded"
                     onClick={handleSave}
                     disabled={
                         createCardMutation.isPending || updateCardMutation.isPending
@@ -169,6 +171,9 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                     {createCardMutation.isPending || updateCardMutation.isPending
                         ? "Saving..."
                         : "Save"}
+                </Button>
+                <Button className="rounded" variant="secondary" onClick={onCancel}>
+                    Cancel
                 </Button>
             </div>
         </div>

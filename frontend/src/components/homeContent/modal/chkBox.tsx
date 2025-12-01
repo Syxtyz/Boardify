@@ -1,4 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import type { CheckBoxItem } from "@/lib/objects/data"
 
 interface CardCheckboxListProps {
@@ -9,9 +10,9 @@ interface CardCheckboxListProps {
 
 export default function CardCheckboxList({ items, onToggle, readOnly = false }: CardCheckboxListProps) {
     return (
-        <div className="flex flex-col gap-2 mt-1">
+        <ScrollArea className={`${items.length > 5 ? "h-30" : null}`}>
             {items.map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
+                <div key={i} className="flex items-center space-x-2">
                     <Checkbox
                         checked={item.checked}
                         onCheckedChange={() => !readOnly && onToggle?.(i)}
@@ -25,6 +26,7 @@ export default function CardCheckboxList({ items, onToggle, readOnly = false }: 
                     </span>
                 </div>
             ))}
-        </div>
+            <ScrollBar orientation="vertical" />
+        </ScrollArea>
     )
 }
