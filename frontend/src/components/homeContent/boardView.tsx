@@ -123,20 +123,17 @@ export default function BoardView() {
     [lists, reorderCardsMutation]
   )
 
-  // ✅ CUSTOM COLLISION DETECTION FOR LISTS AND CARDS
   const customCollisionDetection = useCallback(
     ({ active, droppableContainers, ...args }: any) => {
       const activeId = Number(active.id)
       const isList = lists.some(l => l.id === activeId)
 
       if (isList) {
-        // LIST COLLISION: only consider other lists
         const listContainers = droppableContainers.filter((c: any) =>
           lists.some(l => l.id === Number(c.id))
         )
         return closestCenter({ ...args, active, droppableContainers: listContainers })
       } else {
-        // CARD COLLISION: only consider card containers (not lists)
         const cardContainers = droppableContainers.filter((c: any) =>
           !lists.some(l => l.id === Number(c.id))
         )
