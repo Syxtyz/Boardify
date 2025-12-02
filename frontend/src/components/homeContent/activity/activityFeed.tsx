@@ -1,7 +1,7 @@
 import { ActivityStore } from "@/lib/stores/activityStore"
 import { BoardStore } from "@/lib/stores/boardStore"
 import { useEffect, useState } from "react"
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "../../ui/sheet"
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../../ui/sheet"
 import { Button } from "../../ui/button"
 import { Spinner } from "../../ui/spinner"
 import { ScrollArea } from "../../ui/scroll-area"
@@ -12,6 +12,8 @@ export default function ActivityFeed() {
     const selectedBoard = BoardStore((s) => s.selectedBoard)
 
     const user = ActivityStore((s) => s.user)
+
+    if (!user) return
 
     const filteredLogs = ActivityStore((s) => s.filteredLogs)
     const logs = filteredLogs()
@@ -30,7 +32,7 @@ export default function ActivityFeed() {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant={"outline"} size={"default"}><HistoryIcon/></Button>
+                <Button variant={"outline"} size={"default"}><HistoryIcon /></Button>
             </SheetTrigger>
 
             <SheetContent>
@@ -54,8 +56,8 @@ export default function ActivityFeed() {
                     {!loading && logs.length === 0 && <p>No activity yet.</p>}
                 </div>
 
-                <ScrollArea className="h-[calc(100vh-26%)] px-4 -mt-6.5">
-                {/* <ScrollArea className="h-[calc(100vh-32%)] px-4 -mt-6.5"> */}
+                <ScrollArea className="h-[calc(100vh-23.5%)] px-4 -mt-6.5">
+                    {/* <ScrollArea className="h-[calc(100vh-32%)] px-4 -mt-6.5"> */}
                     {!loading && logs.length > 0 && logs.map((log) => (
                         <div key={log.id} className="bg-secondary border mb-2 rounded-sm p-2">
                             <div className="grid gap-2">
@@ -69,11 +71,11 @@ export default function ActivityFeed() {
                     ))}
                 </ScrollArea>
 
-                <SheetFooter>
-                    <SheetClose asChild>
-                        <Button variant="outline" className="cursor-pointer">Close</Button>
-                    </SheetClose>
-                </SheetFooter>
+                {/* <SheetFooter> */}
+                <SheetClose asChild>
+                    <Button variant="outline" className="cursor-pointer w-fit mx-auto">Close</Button>
+                </SheetClose>
+                {/* </SheetFooter> */}
             </SheetContent>
         </Sheet>
     )
