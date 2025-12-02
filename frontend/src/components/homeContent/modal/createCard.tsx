@@ -10,7 +10,7 @@ export default function CreateCard({ onClick, style }: CreateCardProps) {
   return (
     <div
       onClick={onClick}
-      className={clsx(style,`mb-1 p-2 bg-zinc-200 dark:bg-zinc-800 rounded border hover:border-zinc-800 dark:hover:border-zinc-300 cursor-pointer flex items-center text-sm font-medium text-muted-foreground`)}
+      className={clsx(style,`mb-1 p-2 mx-1 bg-zinc-200 dark:bg-zinc-800 rounded border hover:border-zinc-800 dark:hover:border-zinc-300 cursor-pointer flex items-center text-sm font-medium text-muted-foreground`)}
     >
       <AddIcon className="h-4 w-4 mr-2" />
       Add Card

@@ -332,7 +332,7 @@ export default function BoardView() {
             <div className="flex flex-row items-start mx-4 sm:mx-6 gap-6 justify-start mt-1">
               {lists.map((list) => (
                 <SortableList key={list.id} list={list}>
-                  <ScrollArea className="max-h-[73vh] overflow-y-auto flex flex-col">
+                  <ScrollArea className="max-h-[70.5vh] overflow-y-auto flex flex-col">
                     <SortableContext
                       items={list.cards.map((c) => c.id)}
                       strategy={verticalListSortingStrategy}

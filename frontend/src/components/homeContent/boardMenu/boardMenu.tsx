@@ -25,7 +25,7 @@ export default function BoardMenu() {
             <ButtonGroup>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="icon" aria-label="More Options">
+                        <Button variant="outline" size="default" aria-label="More Options">
                             <MoreHorizontalIcon />
                         </Button>
                     </DropdownMenuTrigger>

@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { XIcon } from "lucide-react";
-import { toast } from "sonner";
-import { CardStore } from "@/lib/stores/cardStore";
-import type { List, CheckBoxItem } from "@/lib/objects/data";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useCardCreateMutation, useCardUpdateMutation } from "@/lib/hooks/useCard";
+import { useEffect, useState } from "react"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { XIcon } from "lucide-react"
+import { toast } from "sonner"
+import { CardStore } from "@/lib/stores/cardStore"
+import type { List, CheckBoxItem } from "@/lib/objects/data"
+import { useCardCreateMutation, useCardUpdateMutation } from "@/lib/hooks/useCard"
 
 interface CardFormProps {
     selectedList: List | null
@@ -73,48 +72,41 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
             <h3 className="font-semibold text-lg">{isEditing ? "Edit Card" : "Create New Card"}</h3>
 
             <div className="flex items-center space-x-2">
-                
-            <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
 
-            <Select
-                value={cardType}
-                onValueChange={(choice) => {
-                    const type = choice as "paragraph" | "checkbox";
-                    setCardType(type);
-                    
-                    if (type === "checkbox") {
-                        setDescription("");
-                        if (checkboxItems.length === 0) {
-                            setCheckboxItems([{ text: "", checked: false }]);
+                <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+
+                <Select
+                    value={cardType}
+                    onValueChange={(choice) => {
+                        const type = choice as "paragraph" | "checkbox";
+                        setCardType(type);
+
+                        if (type === "checkbox") {
+                            setDescription("");
+                            if (checkboxItems.length === 0) {
+                                setCheckboxItems([{ text: "", checked: false }]);
+                            }
+                        } else {
+                            setCheckboxItems([]);
                         }
-                    } else {
-                        setCheckboxItems([]);
-                    }
-                }}
+                    }}
                 >
-                <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="paragraph">Paragraph</SelectItem>
-                    <SelectItem value="checkbox">Checkbox</SelectItem>
-                </SelectContent>
-            </Select>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="paragraph">Paragraph</SelectItem>
+                        <SelectItem value="checkbox">Checkbox</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
-            <ScrollArea className={`${checkboxItems.length > 4 ? " h-48 pr-2": null}`}>
+            <div>
                 {cardType === "checkbox" ? (
                     <div className="space-y-2">
+                        <p>Items:</p>
                         {checkboxItems.map((item, i) => (
                             <div key={i} className="flex items-center gap-2">
-                                {/* <Checkbox
-                                    checked={item.checked}
-                                    onCheckedChange={() => {
-                                        const updated = [...checkboxItems];
-                                        updated[i].checked = !updated[i].checked;
-                                        setCheckboxItems(updated);
-                                    }}
-                                /> */}
                                 <Input
                                     value={item.text}
                                     onChange={(e) => {
@@ -135,19 +127,36 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                                 </Button>
                             </div>
                         ))}
-
-                        <Button
-                            variant="outline"
-                            onClick={() =>
-                                setCheckboxItems([...checkboxItems, { text: "", checked: false }])
-                            }
-                            disabled={
-                                checkboxItems.length > 0 &&
-                                !checkboxItems[checkboxItems.length - 1].text.trim()
-                            }
-                        >
-                            Add item
-                        </Button>
+                        <div className="flex justify-between mr-11">
+                            <Button
+                                variant="outline"
+                                onClick={() =>
+                                    setCheckboxItems([...checkboxItems, { text: "", checked: false }])
+                                }
+                                disabled={
+                                    checkboxItems.length > 0 &&
+                                    !checkboxItems[checkboxItems.length - 1].text.trim()
+                                }
+                            >
+                                Add item
+                            </Button>
+                            <div className="flex flex-row sm:justify-end gap-4 sm:space-y-0 sm:pt-0">
+                                <Button
+                                    className="rounded"
+                                    onClick={handleSave}
+                                    disabled={
+                                        createCardMutation.isPending || updateCardMutation.isPending
+                                    }
+                                >
+                                    {createCardMutation.isPending || updateCardMutation.isPending
+                                        ? "Saving..."
+                                        : "Save"}
+                                </Button>
+                                <Button className="rounded" variant="secondary" onClick={onCancel}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 ) : cardType === "paragraph" ? (
                     <Textarea
@@ -158,24 +167,26 @@ export default function CardForm({ selectedList, isEditing = false, onCancel }: 
                         rows={4}
                     />
                 ) : null}
-            </ScrollArea>
-
-            <div className="flex flex-col sm:justify-end gap-2 sm:space-y-0 sm:pt-0">
-                <Button
-                    className="rounded"
-                    onClick={handleSave}
-                    disabled={
-                        createCardMutation.isPending || updateCardMutation.isPending
-                    }
-                >
-                    {createCardMutation.isPending || updateCardMutation.isPending
-                        ? "Saving..."
-                        : "Save"}
-                </Button>
-                <Button className="rounded" variant="secondary" onClick={onCancel}>
-                    Cancel
-                </Button>
             </div>
+
+            {cardType === "paragraph" && (
+                <div className="flex flex-row sm:justify-end gap-2 sm:space-y-0 sm:pt-0">
+                    <Button
+                        className="rounded"
+                        onClick={handleSave}
+                        disabled={
+                            createCardMutation.isPending || updateCardMutation.isPending
+                        }
+                    >
+                        {createCardMutation.isPending || updateCardMutation.isPending
+                            ? "Saving..."
+                            : "Save"}
+                    </Button>
+                    <Button className="rounded" variant="secondary" onClick={onCancel}>
+                        Cancel
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }
