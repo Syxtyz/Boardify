@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Board, Card, List, ActivityLog
+from .models import Board, Card, List, ActivityLog, Comment
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -67,3 +67,11 @@ class ActivityLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivityLog
         fields = ['id', 'user', 'action', 'board', 'list', 'card', 'timestamp', 'details']
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'card', 'user', 'guest_name', 'content', 'created_at']
+        read_only_fields = ['id', 'card', 'user', 'created_at']

@@ -74,3 +74,18 @@ class ActivityLog(models.Model):
 
     def __str__(self):
         return f"{self.user} {self.get_action_display()} at {self.timestamp}"
+    
+class Comment(models.Model):
+    card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    guest_name = models.CharField(max_length=100, blank=True)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        if self.user:
+            return f"{self.user.username}: {self.content[:20]}"
+        return f"Guest({self.guest_namne}): {self.content[:20]}"

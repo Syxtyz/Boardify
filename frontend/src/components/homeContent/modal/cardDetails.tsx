@@ -4,6 +4,8 @@ import { CardStore } from "@/lib/stores/cardStore";
 import CardCheckboxList from "./chkBox";
 import { useCardDeleteMutation, useCardUpdateMutation } from "@/lib/hooks/useCard";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { useComments, useCreateComment } from "@/lib/hooks/useComment";
 
 interface CardDetailsProps {
     onEdit: () => void;
@@ -14,9 +16,13 @@ export default function CardDetails({ onEdit }: CardDetailsProps) {
     const { selectedBoard } = BoardStore();
     const deleteMutation = useCardDeleteMutation()
     const updateMutation = useCardUpdateMutation()
-    if (!selectedCard) return null;
+    const [newComment, setNewComment] = useState("")
 
     if (!selectedBoard) return
+    if (!selectedCard) return null;
+
+    const { data: comments = [], isLoading } = useComments(selectedCard?.id)
+    const createCommentMutation = useCreateComment()
 
     const toggleCheckbox = (i: number) => {
         const updated = selectedCard.checkbox_items.map((item, idx) =>
@@ -50,8 +56,44 @@ export default function CardDetails({ onEdit }: CardDetailsProps) {
 
             <Separator />
 
-            <div className="flex h-40 items-center">
-                <p>Comment Box</p>
+            <div className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        placeholder="Write a comment..."
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        className="flex-1 border p-2 rounded"
+                    />
+                    <Button
+                        size="sm"
+                        onClick={() => {
+                            if (newComment.trim()) {
+                                createCommentMutation.mutate({
+                                    cardId: selectedCard.id,
+                                    content: newComment.trim(),
+                                });
+                                setNewComment("");
+                            }
+                        }}
+                    >
+                        Add
+                    </Button>
+                </div>
+
+                <div className="mt-2 flex flex-col gap-1 overflow-auto max-h-32">
+                    {isLoading ? (
+                        <p>Loading comments...</p>
+                    ) : comments.length === 0 ? (
+                        <p>No comments yet.</p>
+                    ) : (
+                        comments.map((c) => (
+                            <div key={c.id} className="text-sm border-b py-1">
+                                <strong>{c.user || c.guest_name || "Guest"}:</strong> {c.content}
+                            </div>
+                        ))
+                    )}
+                </div>
             </div>
         </div>
     );

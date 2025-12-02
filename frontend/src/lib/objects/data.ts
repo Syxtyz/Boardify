@@ -49,3 +49,11 @@ export interface ActivityLog {
     details: string
     timestamp: string
 }
+
+export interface Comment {
+    id: number
+    content: string
+    user: String | null
+    guest_name: string | null
+    created_at: string
+}

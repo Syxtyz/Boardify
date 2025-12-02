@@ -15,7 +15,9 @@ from .views import (
     CurrentUserView,
     ReorderListsView,
     ReorderCardsView,
-    ActivityLogList
+    ActivityLogList,
+    CommentListCreateView,
+    CommentDetailView,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -44,5 +46,8 @@ urlpatterns = [
     path('lists/reorder/', ReorderListsView.as_view(), name='reorder-lists'),
     path('cards/reorder/', ReorderCardsView.as_view(), name='reorder-cards'),
 
-    path('boards/<int:board_id>/activities/', ActivityLogList.as_view(), name='board-activities')
+    path('boards/<int:board_id>/activities/', ActivityLogList.as_view(), name='board-activities'),
+
+    path('cards/<int:card_id>/comments/', CommentListCreateView.as_view(), name='comment-list-create'),
+    path('cards/<int:pk>/', CommentDetailView.as_view(), name='comment-detail')
 ]

@@ -213,8 +213,8 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.exceptions import NotFound, PermissionDenied
-from .models import Board, List, Card, ActivityLog
-from .serializers import ( UserSerializer, RegisterSerializer, BoardSerializer, BoardShareSerializer, BoardUnshareSerializer, ListSerializer, CardSerializer, ActivityLogSerializer)
+from .models import Board, List, Card, ActivityLog, Comment
+from .serializers import UserSerializer, RegisterSerializer, BoardSerializer, BoardShareSerializer, BoardUnshareSerializer, ListSerializer, CardSerializer, ActivityLogSerializer, CommentSerializer
 from django.contrib.auth.models import User
 
 class UserList(generics.ListAPIView):
@@ -561,3 +561,22 @@ class ActivityLogList(generics.ListAPIView):
     def get_queryset(self):
         board_id = self.kwargs['board_id']
         return ActivityLog.objects.filter(board__id=board_id)
+
+class CommentListCreateView(generics.ListCreateAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        card_id = self.kwargs.get('card_id')
+        return Comment.objects.filter(card_id=card_id)
+
+    def perform_create(self, serializer):
+        user = self.request.user if self.request.user.is_authenticated else None
+        card_id = self.kwargs.get('card_id')
+        card = Card.objects.get(id=card_id)
+        serializer.save(user=user, card=card)
+
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.AllowAny]

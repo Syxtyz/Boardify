@@ -1,6 +1,6 @@
 import { api } from "../contexts/authContext";
 import { ReOrderCardURL } from "../helper/urls";
-import type { Card } from "../objects/data";
+import type { Card, Comment } from "../objects/data";
 
 export const reorderCards = async (cards: { id: number, list:number, order:number }[]) => {
     const { data } = await api.post(ReOrderCardURL, { cards })
@@ -19,5 +19,15 @@ export const createCard = async (boardId: number, listId: number, title: string,
 
 export const updateCard = async (boardId: number, listId: number, cardId: number, newData: Partial<Card>) => {
     const { data } = await api.patch(`boards/${boardId}/lists/${listId}/cards/${cardId}/`, newData)
+    return data
+}
+
+export const createComment = async(cardId: number, content: string) => {
+    const { data } = await api.post(`cards/${cardId}/comments/`, { content })
+    return data
+}
+
+export const fetchComments = async (cardId: number): Promise<Comment[]> => {
+    const { data } = await api.get(`cards/${cardId}/comments/`)
     return data
 }
