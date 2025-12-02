@@ -98,7 +98,7 @@ export default function ModalView({
                                         onCancel={() => setIsEditing(false)}
                                     />
                                 ) : (
-                                    <div className="flex flex-col h-full gap-4 mb-4">
+                                    <div className="flex flex-col h-full gap-4">
                                         <CardDetails onEdit={() => setIsEditing(true)} />
                                     </div>
                                 ) : (
