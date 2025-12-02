@@ -1,23 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ThemeButton from "@/components/themeButton";
-import type { List, Card } from "@/lib/objects/data";
 import CardCheckboxList from "@/components/homeContent/modal/chkBox";
 import { usePublicBoard } from "@/lib/hooks/useBoard";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import type { List, Card } from "@/lib/objects/data";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 
 export default function PublicBoardScreen() {
     const { public_id } = useParams();
-    const { data: board, isLoading, isError } = usePublicBoard(public_id!)
+    const { data: board, isLoading, isError } = usePublicBoard(public_id!);
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [selectedList, setSelectedList] = useState<List | null>(null);
+    const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
-    if (isLoading) return <div>Loading board...</div>
-    if (isError) return <div>Board not found or private.</div>
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 640);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    if (isLoading) return <div>Loading board...</div>;
+    if (isError) return <div>Board not found or private.</div>;
+
+    const openListModal = (list: List) => {
+        setSelectedList(list);
+        setSelectedCard(null);
+        setModalOpen(true);
+    };
+
+    const openCardModal = (list: List, card: Card) => {
+        setSelectedList(list);
+        setSelectedCard(card);
+        setModalOpen(true);
+    };
 
     return (
         <>
@@ -29,132 +49,125 @@ export default function PublicBoardScreen() {
             </div>
 
             <ScrollArea className="h-[calc(100vh-3rem)]">
-                <div className="flex flex-col md:flex-row items-start mx-2 gap-3 md:gap-4 justify-center md:justify-start mt-0.5">
-                    {board.lists.map((list: any) => (
-                        <Dialog
-                            key={list.id}
-                            open={modalOpen && selectedList?.id === list.id}
-                            onOpenChange={async (isOpen) => {
-                                setModalOpen(isOpen)
-                                if (!isOpen) {
-                                    await new Promise((resolve) => setTimeout(resolve, 200))
-                                    setSelectedCard(null)
-                                    setSelectedList(null)
-                                }
-                            }}
-                        >
-                            <DialogTrigger asChild>
-                                <div
-                                    className="w-64 flex flex-col bg-gray-100 dark:bg-zinc-900 font-bold py-2 pl-2 rounded transition-transform hover:scale-[1.01]"
-                                    onClick={() => setSelectedList(list)}
-                                >
-                                    <div className="relative">
-                                        <div className="text-base sm:text-lg mb-1 truncate ml-1">{list.title}</div>
-                                    </div>
+                <div className="flex flex-row items-start gap-6 mx-6 mt-1 pb-4">
+                    {board.lists.map((list: List) => (
+                        <div key={list.id} className="flex flex-col w-64 bg-gray-100 dark:bg-zinc-900 rounded p-2">
+                            <div
+                                className="cursor-pointer font-bold mb-2 truncate"
+                                onClick={() => openListModal(list)}
+                            >
+                                {list.title}
+                            </div>
 
-                                    <ScrollArea className="max-h-[calc(100vh-6.85rem)] overflow-y-auto flex flex-col pr-2">
-                                        <div className="flex flex-col">
-                                            {list.cards.map((card: any) => {
+                            <ScrollArea className="max-h-[82vh] overflow-y-auto flex flex-col pr-2 mb-1">
+                                {list.cards.map((card) => {
+                                    const finished = card.card_type === "checkbox"
+                                        ? card.checkbox_items?.filter(i => i.checked).length || 0
+                                        : 0;
+                                    const total = card.card_type === "checkbox"
+                                        ? card.checkbox_items?.length || 0
+                                        : 0;
+
+                                    return (
+                                        <div
+                                            key={card.id}
+                                            className="flex flex-col bg-zinc-200 dark:bg-zinc-800 rounded cursor-pointer border hover:border-zinc-800 dark:hover:border-zinc-300 mb-2 p-2 text-sm sm:text-base"
+                                            onClick={() => openCardModal(list, card)}
+                                        >
+                                            {card.card_type === "checkbox" ? (
+                                                <div className="flex items-center gap-1">
+                                                    <CheckBoxOutlinedIcon />
+                                                    {finished} / {total}
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <p className="font-medium truncate w-52">{card.title}</p>
+                                                    <p className="text-sm text-gray-500 w-52 truncate">{card.description}</p>
+                                                </>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                                <ScrollBar orientation="vertical" />
+                            </ScrollArea>
+                        </div>
+                    ))}
+                </div>
+                <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+
+            <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+                <DialogContent className={`flex flex-col sm:flex-row sm:max-w-none overflow-auto ${isMobile ? "h-screen w-screen" : "h-[90vh] w-11/12"}`}>
+                    {isMobile ? (
+                        <div className="flex flex-col pt-4 gap-4">
+                            <h3 className="font-semibold text-lg">{selectedCard?.title}</h3>
+                            {selectedCard?.card_type === "paragraph" ? (
+                                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                                    {selectedCard.description}
+                                </p>
+                            ) : (
+                                <CardCheckboxList items={selectedCard?.checkbox_items || []} readOnly />
+                            )}
+                        </div>
+                    ) : (
+                        <div className="flex flex-row w-full h-fit gap-4">
+                            <div className="w-1/3 h-full">
+                                <div>
+                                    <div className="space-y-2 p-2">
+                                        {selectedList?.cards.length === 0 ? (
+                                            <p className="text-sm text-muted-foreground text-center">No cards in this list.</p>
+                                        ) : (
+                                            selectedList?.cards.map((card: Card) => {
                                                 const finished = card.card_type === "checkbox"
-                                                    ? card.checkbox_items?.filter((item: any) => item.checked).length || 0
+                                                    ? card.checkbox_items?.filter(i => i.checked).length || 0
                                                     : 0;
                                                 const total = card.card_type === "checkbox"
                                                     ? card.checkbox_items?.length || 0
                                                     : 0;
-                                                return (
 
+                                                return (
                                                     <div
                                                         key={card.id}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setSelectedList(list);
-                                                            setSelectedCard(card);
-                                                            setModalOpen(true);
-                                                        }}
-                                                        className="flex flex-col bg-zinc-200 dark:bg-zinc-800 rounded cursor-pointer border hover:border-zinc-800 dark:hover:border-zinc-300 my-1 mx-1 p-2 text-sm sm:text-base"
+                                                        className="flex flex-col p-2 bg-zinc-200 dark:bg-zinc-800 rounded cursor-pointer border hover:border-zinc-600"
+                                                        onClick={() => openCardModal(selectedList, card)}
                                                     >
                                                         {card.card_type === "checkbox" ? (
-                                                            <div>
+                                                            <div className="flex items-center gap-1">
                                                                 <CheckBoxOutlinedIcon fontSize="small" />
                                                                 {finished} / {total}
                                                             </div>
                                                         ) : (
                                                             <>
                                                                 <p className="font-medium truncate">{card.title}</p>
-                                                                <p className="text-sm text-gray-500 w-full truncate">{card.description}</p>
+                                                                <p className="text-sm text-gray-500 truncate">{card.description}</p>
                                                             </>
                                                         )}
                                                     </div>
-                                                )
-                                            }
-                                            )}
-                                        </div>
-                                        <ScrollBar orientation="vertical" />
-                                    </ScrollArea>
-                                </div>
-                            </DialogTrigger>
-
-
-                            {/* <DialogContent className="flex flex-row w-[90vw] sm:max-w-none md:max-w-none lg:max-w-none max-w-none"> */}
-                            <DialogContent className="flex flex-col gap-2">
-
-                                {/* <ScrollArea className="w-[50%] sm:w-[35%] h-[75vh] pr-3"> */}
-                                <ScrollArea className="w-full">
-                                    <DialogHeader>
-                                        <DialogTitle>{selectedList?.title}</DialogTitle>
-                                    </DialogHeader>
-                                    <DialogDescription className="space-y-2 mt-4">
-                                        {selectedList?.cards.length === 0 ? (
-                                            <div className="text-center text-gray-500 py-4">No cards available</div>
-                                        ) : (
-                                            selectedList?.cards.map((card) => (
-                                                <div
-                                                    key={card.id}
-                                                    onClick={() => setSelectedCard(card)}
-                                                    className={`flex flex-col rounded cursor-pointer border w-full p-2 text-sm sm:text-base ${selectedCard?.id === card.id
-                                                        ? "bg-zinc-300 dark:bg-zinc-800 border-zinc-600"
-                                                        : "bg-zinc-200 dark:bg-zinc-900 hover:border-zinc-700"
-                                                        }`}
-                                                >
-                                                    <p className="font-medium break-all">{card.title}</p>
-                                                    <p className="text-sm text-gray-500 w-full truncate">{card.description}</p>
-                                                </div>
-                                            ))
+                                                );
+                                            })
                                         )}
-                                    </DialogDescription>
-                                    <ScrollBar orientation="vertical" />
-                                </ScrollArea>
-
-                                {/* <div className="border-r border-zinc-300 dark:border-zinc-700" /> */}
-                                <div className="border-b-2 pb-1 border-zinc-300 dark:border-zinc-700"></div>
-
-                                {/* <div className="w-[50%] pl-3"> */}
-                                <div className="w-full">
-                                    {selectedCard ? (
-                                        <>
-                                            <DialogHeader>
-                                                <DialogTitle className="text-start mt-1">{selectedCard.title}</DialogTitle>
-                                                <DialogDescription className="text-gray-500 dark:text-gray-400 mt-2 text-start">
-                                                    {selectedCard.card_type === "paragraph" ? (
-                                                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                                                            {selectedCard.description}
-                                                        </p>
-                                                    ) : (
-                                                        <CardCheckboxList items={selectedCard.checkbox_items} />
-                                                    )}
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                        </>
-                                    ) : (
-                                        <p className="text-gray-500 mt-4 text-sm text-center">Select a card to view its details.</p>
-                                    )}
+                                    </div>
                                 </div>
-                            </DialogContent>
-                        </Dialog>
-                    ))}
-                </div>
-                <ScrollBar orientation="horizontal" />
-            </ScrollArea>
+                            </div>
+                            <div className="border" />
+                            <div className="w-full flex flex-col gap-4 overflow-auto">
+                                {selectedCard ? (
+                                    <div className="p-2">
+                                        <h3 className="font-semibold text-lg">{selectedCard.title}</h3>
+                                        {selectedCard.card_type === "paragraph" ? (
+                                            <p className="text-sm text-muted-foreground whitespace-break-spaces">{selectedCard.description}</p>
+                                        ) : (
+                                            <CardCheckboxList items={selectedCard.checkbox_items} readOnly />
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p className="text-center text-sm mt-2">Select a card to view details.</p>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

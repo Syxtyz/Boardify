@@ -35,7 +35,7 @@ export default function BoardMenu() {
                                 <Edit2Icon /> Rename Board
                             </DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => setShowShareDialog(true)}>
-                                <Share2Icon /> Export and Share
+                                <Share2Icon /> Share Board
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
