@@ -21,7 +21,7 @@ export default function LoginForm() {
         try {
             setLoading(true);
             const response = await axios.post(LoginUrl, {
-                username: values.userEmail, // Django default
+                username: values.userEmail,
                 password: values.password,
             });
             login(response.data.access, response.data.refresh);

@@ -23,14 +23,12 @@ export default function RegisterForm() {
             setLoading(true);
             setError("");
 
-            // Register user
             await axios.post(RegisterUrl, {
                 username: values.username,
                 email: values.email,
                 password: values.password,
             });
 
-            // Auto-login after register
             const loginRes = await axios.post(LoginUrl, {
                 username: values.username,
                 password: values.password,

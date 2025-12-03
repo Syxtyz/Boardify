@@ -3,16 +3,16 @@ import type { ActivityLog } from "../objects/data";
 import { getActivityLogs } from "../api/logsAPI";
 
 interface ActivityState {
-  logs: ActivityLog[];
-  loading: boolean;
-  offset: number;
-  limit: number;
-  count: number; // total logs from server
-  fetchlogs: (boardId: number) => Promise<void>;
-  fetchNextPage: (boardId: number) => Promise<void>;
-  user: number | "all";
-  setSelectedUser: (id: number | "all") => void;
-  filteredLogs: () => ActivityLog[];
+  logs: ActivityLog[]
+  loading: boolean
+  offset: number
+  limit: number
+  count: number
+  fetchlogs: (boardId: number) => Promise<void>
+  fetchNextPage: (boardId: number) => Promise<void>
+  user: number | "all"
+  setSelectedUser: (id: number | "all") => void
+  filteredLogs: () => ActivityLog[]
 }
 
 export const ActivityStore = create<ActivityState>((set, get) => ({
@@ -38,7 +38,7 @@ export const ActivityStore = create<ActivityState>((set, get) => ({
   },
 
   fetchNextPage: async (boardId) => {
-    const { logs, offset, limit, count, loading } = get();
+    const { logs, offset, count, loading } = get();
     if (loading || offset >= count) return;
 
     set({ loading: true });

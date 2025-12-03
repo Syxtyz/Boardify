@@ -23,15 +23,6 @@ export default function TopNavigation() {
               Login
             </LoginButton>
             <RegisterButton/>
-
-            
-
-            {/* <button
-              className="cursor-pointer border px-3 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => setIsRegisterOpen(true)}
-            >
-              Register
-            </button> */}
           </>
         ) : (
           <>

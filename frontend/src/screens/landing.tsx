@@ -35,13 +35,13 @@ export default function LandingScreen() {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 w-full"><TopNavigation/></nav>
+            <nav className="fixed top-0 left-0 w-full"><TopNavigation /></nav>
 
             <ScrollArea className="h-[calc(100vh-3rem)] mt-12">
-                <main className="flex flex-col">
-                    <section ref={topSection} className="flex flex-col items-center justify-center text-center px-4 py-24 from-background via-muted/50 to-background">
+                <main className="flex flex-col my-24 gap-24">
+                    <section ref={topSection} className="flex flex-col gap-6 items-center justify-center text-center px-4 from-background via-muted/50 to-background">
                         <motion.h2
-                            className="text-5xl font-bold tracking-tight mb-4"
+                            className="text-5xl font-bold tracking-tight"
                             variants={fadeInUp}
                             initial="hidden"
                             animate="show"
@@ -50,7 +50,7 @@ export default function LandingScreen() {
                         </motion.h2>
 
                         <motion.p
-                            className="text-muted-foreground max-w-md mb-6"
+                            className="text-muted-foreground max-w-md"
                             variants={fadeInUp}
                             initial="hidden"
                             animate="show"
@@ -66,12 +66,12 @@ export default function LandingScreen() {
                             transition={{ delay: 0.6 }}
                         >
                             <LoginButton variant="default" size="lg">
-                                Get Started <ArrowRightIcon className="w-4 h-4"/>
+                                Get Started <ArrowRightIcon className="w-4 h-4" />
                             </LoginButton>
                         </motion.div>
                     </section>
 
-                    <section className="pt-20 px-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <section className="px-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         {[
                             { title: "Boards & Lists", desc: "Stay organized with flexible boards and draggable lists." },
                             { title: "Collaboration", desc: "Invite teammates and track progress in real-time." },
@@ -86,8 +86,8 @@ export default function LandingScreen() {
                                 viewport={{ once: true }}
                             >
                                 <Card className="shadow-md hover:shadow-lg border border-border/40">
-                                    <CardContent className="p-6 text-center">
-                                        <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
+                                    <CardContent className="text-center flex flex-col pt-6 gap-3">
+                                        <h3 className="font-semibold text-lg">{feature.title}</h3>
                                         <p className="text-sm text-muted-foreground">{feature.desc}</p>
                                     </CardContent>
                                 </Card>
@@ -95,9 +95,9 @@ export default function LandingScreen() {
                         ))}
                     </section>
 
-                    <section className="pt-20 text-center px-8">
-                        <h2 className="text-3xl font-bold mb-8">How It Works</h2>
-                        <div className="grid sm:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <section className="text-center px-8 flex flex-col gap-6">
+                        <h2 className="text-3xl font-bold">How It Works</h2>
+                        <div className="px-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                             {[
                                 { step: "1", title: "Create a Board", desc: "Start fresh with your own workspace." },
                                 { step: "2", title: "Add Lists & Cards", desc: "Organize your workflow into tasks and subtasks." },
@@ -111,19 +111,19 @@ export default function LandingScreen() {
                                     whileInView="show"
                                     viewport={{ once: true }}
                                 >
-                                    <div className="p-6 border rounded-lg bg-background shadow-sm h-full">
-                                        <div className="w-10 h-10 mx-auto mb-4 flex items-center justify-center bg-blue-500 text-white font-bold rounded-full">
+                                    <div className="order rounded-lg bg-background shadow-md hover:shadow-lg flex flex-col gap-3 h-full p-6">
+                                        <div className="w-10 h-10 mx-auto flex items-center justify-center bg-blue-500 text-white font-bold rounded-full">
                                             {step.step}
                                         </div>
-                                        <h3 className="font-semibold mb-2">{step.title}</h3>
+                                        <h3 className="font-semibold">{step.title}</h3>
                                         <p className="text-sm text-muted-foreground">{step.desc}</p>
                                     </div>
                                 </motion.div>
                             ))}
                         </div>
                     </section>
- 
-                    <section className="py-20 text-center px-8">
+
+                    <section className="text-center px-8">
                         <h2 className="text-3xl font-bold mb-4">Ready to Get Organized?</h2>
                         <p className="mb-6 max-w-md mx-auto">
                             Start using Boardify today — it's free to begin, simple to master.
@@ -131,14 +131,14 @@ export default function LandingScreen() {
                         <Button
                             onClick={scrollToTop}
                             size="lg"
-                            className="font-semibold hover:bg-gray-100"
+                            className="font-semibold cursor-pointer"
                         >
                             Start for Free <ArrowRightIcon className=" w-4 h-4" />
                         </Button>
                     </section>
                 </main>
 
-                <footer>
+                <footer className="flex flex-col items-center justify-center mx-8">
                     <FooterContent />
                 </footer>
                 <ScrollBar orientation="vertical" />

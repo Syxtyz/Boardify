@@ -6,7 +6,7 @@ export default function RegisterButton() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Register</Button>
+                <Button className="cursor-pointer" variant="outline">Register</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

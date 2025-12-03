@@ -13,7 +13,7 @@ export default function LoginButton({children, variant , size}: LoginButtonProps
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant={variant} size={size}>{children}</Button>
+                <Button className="cursor-pointer" variant={variant} size={size}>{children}</Button>
             </DialogTrigger>
             <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
                 <DialogHeader>

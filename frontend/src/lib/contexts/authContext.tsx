@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (access: string, refresh: string) => {
     setAccessToken(access);
     setRefreshToken(refresh);
-    accessTokenRef.current = access;  // <-- update ref immediately
+    accessTokenRef.current = access;
     refreshTokenRef.current = refresh;
     localStorage.setItem("accessToken", access);
     localStorage.setItem("refreshToken", refresh);
