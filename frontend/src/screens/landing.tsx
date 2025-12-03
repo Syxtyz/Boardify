@@ -35,13 +35,13 @@ export default function LandingScreen() {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 w-full"><TopNavigation/></nav>
+            <nav className="fixed w-full z-99 bg-[#f0f0f0]"><TopNavigation/></nav>
 
-            <ScrollArea className="h-[calc(100vh-3rem)] mt-12">
+            <ScrollArea className="h-full">
                 <main className="flex flex-col">
-                    <section ref={topSection} className="flex flex-col items-center justify-center text-center px-4 py-24 from-background via-muted/50 to-background">
+                    <section ref={topSection} className="w-screen h-screen flex flex-col items-center justify-center text-center px-4 from-background via-muted/50 to-background">
                         <motion.h2
-                            className="text-5xl font-bold tracking-tight mb-4"
+                            className="text-5xl md:text-7xl font-bold tracking-tight mb-4"
                             variants={fadeInUp}
                             initial="hidden"
                             animate="show"
@@ -69,9 +69,8 @@ export default function LandingScreen() {
                                 Get Started <ArrowRightIcon className="w-4 h-4"/>
                             </LoginButton>
                         </motion.div>
-                    </section>
 
-                    <section className="pt-20 px-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div className="pt-10 px-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         {[
                             { title: "Boards & Lists", desc: "Stay organized with flexible boards and draggable lists." },
                             { title: "Collaboration", desc: "Invite teammates and track progress in real-time." },
@@ -92,11 +91,13 @@ export default function LandingScreen() {
                                     </CardContent>
                                 </Card>
                             </motion.div>
-                        ))}
+                            ))}
+                        </div>
+
                     </section>
 
-                    <section className="pt-20 text-center px-8">
-                        <h2 className="text-3xl font-bold mb-8">How It Works</h2>
+                    <section className="w-screen h-screen text-center px-8 items-center justify-center flex flex-col">
+                        <h2 className="text-5xl font-bold mb-8">How It Works</h2>
                         <div className="grid sm:grid-cols-3 gap-8 max-w-5xl mx-auto">
                             {[
                                 { step: "1", title: "Create a Board", desc: "Start fresh with your own workspace." },
@@ -121,9 +122,7 @@ export default function LandingScreen() {
                                 </motion.div>
                             ))}
                         </div>
-                    </section>
- 
-                    <section className="py-20 text-center px-8">
+                        <div className="pt-10 text-center px-8">
                         <h2 className="text-3xl font-bold mb-4">Ready to Get Organized?</h2>
                         <p className="mb-6 max-w-md mx-auto">
                             Start using Boardify today — it's free to begin, simple to master.
@@ -135,6 +134,7 @@ export default function LandingScreen() {
                         >
                             Start for Free <ArrowRightIcon className=" w-4 h-4" />
                         </Button>
+                    </div>
                     </section>
                 </main>
 

@@ -10,13 +10,13 @@
 
 html.dark body {
   background-color: #09090b;
-  color: #e5e5e5;
+  color: #f0f0f0;
   /* neutral-200 */
 }
 
 html:not(.dark) body{
-  background-color: #f8f8f8;
-  color: #111827;
+  background-color: #f0f0f0;
+  color: #09090b;
 }
 
 /* vscode-ignore: @custom-variant */

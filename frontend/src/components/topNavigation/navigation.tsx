@@ -8,10 +8,10 @@ export default function TopNavigation() {
   const { isLoggedIn, logout } = useAuth();
 
   return (
-    <div className="dark:bg-black flex justify-between h-12 px-4 dark:shadow-secondary shadow-sm">
+    <div className="dark:bg-black flex justify-between h-12 px-4 md:px-40 dark:shadow-secondary shadow-sm p-8">
       <div className="flex items-center gap-2">
           {isLoggedIn && <SideNavigation/>}
-          <h1 className="font-bold text-lg">Boardify</h1>
+          <h1 className="font-bold text-2xl">Boardify</h1>
       </div>
   
       <div className="flex items-center gap-2"> 
@@ -19,12 +19,10 @@ export default function TopNavigation() {
 
         {!isLoggedIn ? (
           <>
-            <LoginButton variant="outline" size="default">
+            <LoginButton variant="default" size="default">
               Login
             </LoginButton>
             <RegisterButton/>
-
-            
 
             {/* <button
               className="cursor-pointer border px-3 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"

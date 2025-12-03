@@ -63,7 +63,7 @@ export default function ActivityFeed() {
 
                     <div className="border-b"/>
 
-                    <div className="flex items-center">
+                    <div className="flex items-center gap-2">
                         <p>Sort by</p>
                         <UserFilter />
                     </div>
@@ -80,13 +80,17 @@ export default function ActivityFeed() {
                                     key={log.id}
                                     className="bg-secondary border mb-2 rounded-sm p-2"
                                 >
-                                    <div className="grid gap-1">
+                                    <div className="p-2 grid gap-6">
                                         <div>
                                             <strong>{log.user?.username || "Unknown User"}</strong>
                                             {": "}
+                                        </div>
+                                        <div className="text-left px-3">
                                             <span>{log.details}</span>
                                         </div>
-                                        <p>{new Date(log.timestamp).toLocaleString()}</p>
+                                        <div className="w-full text-right text-sm text-muted-foreground">
+                                            <p>{new Date(log.timestamp).toLocaleString()}</p>
+                                        </div>
                                     </div>
                                 </div>
                             ))
